@@ -61,7 +61,8 @@ indirect enum Clew2AppState: StateType {
         // NavigateARView events
         case LeaveMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
-        case EndpointReached
+        case PlanPath
+        case EndpointReached(finalEndpoint: Bool)
         case RateMapRequested(mapName: String)
         case HomeScreenRequested
         
@@ -111,6 +112,11 @@ indirect enum Clew2AppState: StateType {
         
         // NavigateARView commands
         case LeaveMap(mapName: String)
+        case PlanPath
+        case UpdateInstructionText
+        case UpdatePoseVIO(cameraFrame: ARFrame)
+        case UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4)
+        
         case ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
         case LoadEndPopUp(mapName: String)
         case LoadRatePopUp(mapName: String)
@@ -252,6 +258,7 @@ enum NavigateARViewState: StateType {
     enum Event {
         case LeaveMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
+        case PlanPath
         case EndpointReached (mapName: String)
         case HomeScreenRequested
         case POIScreenRequested(mapName: String)
@@ -276,6 +283,8 @@ enum NavigateARViewState: StateType {
         case (.NavigateARView, .ChangeRouteRequested(let mapName, let POIName))
             self = .NavigateARView
             return [.ModifyRoute(mapname: mapName, POIName: POIName)]
+        case (.NavigateARView, .PlanPath):
+            return [.PlanPath]
         case (.NavigateARView, .EndpointReached(let mapName))
             self = .NavigateARView
             return [.LoadEndPopUp(mapName: mapName)]
@@ -288,7 +297,9 @@ enum NavigateARViewState: StateType {
         case (.NavigateARView, .RateMapRequested(let mapName))
             self = .NavigateARView
             return [.LoadRatePopUp(mapName: mapName)]
-        
+        case (.NavigateARView, .NewARFrame(let cameraFrame)):
+            return [.UpdatePoseVIO(cameraFrame: cameraFrame), .UpdateInstructionText]
+            
         default: break
         }
         return []

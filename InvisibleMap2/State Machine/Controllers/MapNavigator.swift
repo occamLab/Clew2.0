@@ -159,7 +159,7 @@ class MapNavigator: ObservableObject {
         //    print("arTags array of detected tags: \(arTags)")
             DispatchQueue.main.async {
                 // checks if tags were detected and assigns seesTag depending on that
-                self.seesTag = !arTags.isEmpty
+                self.seesTag = !arTags.isEmpty // seesTag is set to true if it sees at least one tag
                 print("seesTag: \(self.seesTag)")
                 if let map = self.map {
                     if !map.firstTagFound && self.seesTag {
