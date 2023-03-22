@@ -129,6 +129,7 @@
 		98BF26A126AF4F9E0076427E /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
 		98BF26A526B03EAA0076427E /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
 		98BF26A626B03EB90076427E /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
+		98C7D13329BBE22C000C46CA /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C7D13229BBE22B000C46CA /* ARView.swift */; };
 		98D494872757D34700BF0279 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
 		98D494882757D34900BF0279 /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
 		98E9BE982756BAE9001B5A2B /* ViewStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9BE972756BAE9001B5A2B /* ViewStructs.swift */; };
@@ -228,6 +229,7 @@
 		98BF269526AF01F60076427E /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
 		98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		98BF269926AF14D50076427E /* InvisibleMap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InvisibleMap.entitlements; sourceTree = "<group>"; };
+		98C7D13229BBE22B000C46CA /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
 		98E9BE972756BAE9001B5A2B /* ViewStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStructs.swift; sourceTree = "<group>"; };
 		98E9BE9A2756C104001B5A2B /* SelectPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPathView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -571,6 +573,7 @@
 			children = (
 				986A292F29B3AD5200879BCF /* NavigateMapView.swift */,
 				986A293129B3AD6800879BCF /* RecordMapView.swift */,
+				98C7D13229BBE22B000C46CA /* ARView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -902,6 +905,7 @@
 				986A292C29B3AA1200879BCF /* AppController.swift in Sources */,
 				986A293029B3AD5200879BCF /* NavigateMapView.swift in Sources */,
 				986A291C2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift in Sources */,
+				98C7D13329BBE22C000C46CA /* ARView.swift in Sources */,
 				986A29252997FD6200879BCF /* Clew2AppState.swift in Sources */,
 				986A293229B3AD6800879BCF /* RecordMapView.swift in Sources */,
 				986A292A2997FE8800879BCF /* Clew2App.swift in Sources */,
