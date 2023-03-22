@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ARKit
+import ARKit //change
 
 indirect enum Clew2AppState: StateType {
     // Higher level app states
@@ -177,9 +177,6 @@ enum CreateARViewState: StateType {
     case CreateARView
     case DropDoorAnchorState
     case DropStairAnchorState
-
-    
-    
     
     // Initial state upon transitioning into the CreateMapState
     static let initialState = CreateARViewState.CreateARView
