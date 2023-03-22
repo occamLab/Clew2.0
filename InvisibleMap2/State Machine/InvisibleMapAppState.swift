@@ -8,7 +8,7 @@
 
 import Foundation
 import ARKit
-
+//test edit comments
 indirect enum InvisibleMapAppState: StateType {
     // Higher level app states
     case MainScreen

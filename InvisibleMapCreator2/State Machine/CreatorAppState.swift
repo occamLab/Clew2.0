@@ -12,7 +12,7 @@ enum CreatorAppState: StateType {
     // Higher level app states
     case MainScreen
     case RecordMap(RecordMapState)
-    case EditMapScreen//(EditMapState)
+    case EditMapScreen //(EditMapState)
     
     
     // Initial state upon opening the app
