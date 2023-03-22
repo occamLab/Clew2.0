@@ -47,6 +47,11 @@ class MapRecorder: MapRecorderController, ObservableObject {
     @Published var tagWasRecorded = false
     @Published var previousTagRecordedState = false
     
+    // Tracks anchor states
+    @Published var geospatialAnchorWasRecorded = false
+    @Published var cloudAnchorWasRecorded = false
+    
+    
     /// Correct the orientation estimate such that the normal vector of the tag is perpendicular to gravity
     let snapTagsToVertical = true
     
