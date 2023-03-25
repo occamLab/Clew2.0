@@ -185,15 +185,15 @@ class NavigateGlobalState: ObservableObject, NavigateViewController {
     // TODO: resolve anchors in ARView and use the NavigateGlobalStateSingleton to set the variables to true
     @Published var didGeospatialAnchorResolved: Bool
     @Published var didCloudAnchorResolved: Bool
-    @Published var cloudAnchorType: String
     @Published var endPointReached: Bool // set to true in ARView using the NavigateGlobalStateSingleton when current position is within endpointSphere
+    
     @Published var instructionWrapper: InstructionType
     
     init() {
         tagFound = false
         didGeospatialAnchorResolved = false
         didCloudAnchorResolved = false
-        cloudAnchorType = nil // TODO: update value if didCloudAnchorResolved is true using the label that map creators chose when dropping this cloud anchor (POI, door, stair)
+        //cloudAnchorType = nil // TODO: update value if didCloudAnchorResolved is true using the label that map creators chose when dropping this cloud anchor (POI, door, stair)
         endPointReached = false
         instructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
         Clew2AppController.shared.navigateViewer = self
@@ -212,7 +212,7 @@ class NavigateGlobalState: ObservableObject, NavigateViewController {
                 print("Instruction wrapper: \(self.instructionWrapper)")
                 print("tagFound: \(self.tagFound)")
                 
-                self.instructionWrapper.transition(tagFound: self.tagFound, didGeospatialAnchorResolved: self.didGeospatialAnchorResolved, didCloudAnchorResolved: self.didCloudAnchorResolved, cloudAnchorType: self.cloudAnchorType, endPointReached: self.endPointReached)
+                self.instructionWrapper.transition(tagFound: self.tagFound, didGeospatialAnchorResolved: self.didGeospatialAnchorResolved, didCloudAnchorResolved: self.didCloudAnchorResolved, cloudAnchorType: Clew2AppController.shared.cloudAnchorType, endPointReached: self.endPointReached)
                 
                 print("Instruction wrapper: \(self.instructionWrapper)")
             }
