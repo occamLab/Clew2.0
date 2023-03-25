@@ -50,9 +50,9 @@ indirect enum Clew2AppState: StateType {
         
         // CreateARView events
         case DropGeospatialAnchorRequested
-        case DropCloudAnchorRequested
-        case DropDoorAnchorRequested
-        case DropStairAnchorRequested
+        case DropCloudAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform) // POI cloud anchors
+        case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
+        case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)

@@ -27,6 +27,7 @@ class Clew2AppController: AppController {
     
     // controllers for both navigate and create
     public var arViewer: ARViewController? // Initialized in ARView.swift
+    var cloudAnchorType: String // door, 
     
     func initialize() {
         Clew2AppController.shared.arViewer?.initialize()
