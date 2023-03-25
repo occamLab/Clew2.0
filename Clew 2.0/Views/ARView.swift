@@ -367,256 +367,254 @@ extension ARView: ARSessionDelegate {
         
     public func sendPathKeypoints(_ id: String, _ allKeypoints: [KeypointInfo], _ cameraPositions: [Any]) -> String? {
             
-            var waypointCoords: [Any] = []
-            
-            for anchor in allKeypoints
-            {
-                waypointCoords.append([anchor.location.transform.columns.3[0], anchor.location.transform.columns.3[2]])
-            }
-            
-            let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": waypointCoords, "CameraPositions": cameraPositions]
-            
-            do {
-                let jsonData = try
-                JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
-                let storageRef =
-                storageBaseRef.child("NECO_TEST").child(id + ".json")
-                let fileType = StorageMetadata()
-                fileType.contentType = "application/json"
-                storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                    guard metadata != nil else {
-                        // Uh-oh, an error occurred!
-                        print("could not upload meta data to firebase", error!.localizedDescription)
-                        return
-                    }
-                    print("Successfully uploaded log!", storageRef.fullPath)
-                }
-             
-                // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
-                // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
-                return storageRef.fullPath
-            } catch {
-                print(error.localizedDescription)
-                return nil
-            }
+        var waypointCoords: [Any] = []
+        
+        for anchor in allKeypoints
+        {
+            waypointCoords.append([anchor.location.transform.columns.3[0], anchor.location.transform.columns.3[2]])
         }
         
-        func sendPathData(_ id: String,_ allGeoAnchors: [ARGeoAnchor], _ cameraPositions: [Any])->String? {
-                
-            var anchorCoords: [Any] = []
+        let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": waypointCoords, "CameraPositions": cameraPositions]
+        
+        do {
+            let jsonData = try
+            JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
+            let storageRef =
+            storageBaseRef.child("NECO_TEST").child(id + ".json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
+                    return
+                }
+                print("Successfully uploaded log!", storageRef.fullPath)
+            }
+         
+            // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
+            // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
+            return storageRef.fullPath
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func sendPathData(_ id: String,_ allGeoAnchors: [ARGeoAnchor], _ cameraPositions: [Any])->String? {
             
-            for anchor in allGeoAnchors
-            {
-                anchorCoords.append([anchor.transform.columns.3[0], anchor.transform.columns.3[2]])
-            }
-            
-            let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": anchorCoords, "CameraPositions": cameraPositions]
-            
-            do {
-                let jsonData = try
-                JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
-                let storageRef =
-                storageBaseRef.child("GeoAnchorTest").child(id + ".json")
-                let fileType = StorageMetadata()
-                fileType.contentType = "application/json"
-                storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
-                    guard metadata != nil else {
-                        // Uh-oh, an error occurred!
-                        print("could not upload meta data to firebase", error!.localizedDescription)
-                        return
-                    }
-                    print("Successfully uploaded log!", storageRef.fullPath)
-                }
-             
-                // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
-                // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
-                return storageRef.fullPath
-            } catch {
-                print(error.localizedDescription)
-                return nil
-            }
+        var anchorCoords: [Any] = []
+        
+        for anchor in allGeoAnchors
+        {
+            anchorCoords.append([anchor.transform.columns.3[0], anchor.transform.columns.3[2]])
         }
         
-        private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
-            let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
-            
-            var accurateGeoSpatialCrumbMap: [UUID: LocationInfoGeoSpatial] = [:]
-            for geoCrumb in accurateGeoSpatialCrumbs {
-                if let GARAnchorUUID = geoCrumb.GARAnchorUUID {
-                    accurateGeoSpatialCrumbMap[GARAnchorUUID] = geoCrumb
-                }
-            }
-            let currentAccurateGeoAnchors = anchors.filter({ accurateGeoSpatialCrumbMap[$0.identifier] != nil && $0.hasValidTransform })
-            let worldPos = cameraWorldTransform.columns.3
-            guard let bestGeospatialRecordingAnchor = currentAccurateGeoAnchors.min(by: { simd_distance($0.transform.columns.3, worldPos) < simd_distance($1.transform.columns.3, worldPos) }) else {
-                return nil
-            }
-            return (bestGeospatialRecordingAnchor, accurateGeoSpatialCrumbMap[bestGeospatialRecordingAnchor.identifier]!)
-        }
+        let dataDictionary: [String : Any] = ["ID": id, "GeoAnchors": anchorCoords, "CameraPositions": cameraPositions]
         
-        func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4) {
-            guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
-                return
-            }
-            guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform, anchors: GARAnchors) else {
-                return
-            }
-            
-            if let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
-                self.manualAlignment = manualAlignment
-                print("self.manualAlignment \(self.manualAlignment)")
-                delegate?.didDoGeoAlignment()
-            }
-        }
-        
-        private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
-            for anchor in anchors {
-                if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
-                    manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
+        do {
+            let jsonData = try
+            JSONSerialization.data(withJSONObject:dataDictionary, options:.prettyPrinted)
+            let storageRef =
+            storageBaseRef.child("GeoAnchorTest").child(id + ".json")
+            let fileType = StorageMetadata()
+            fileType.contentType = "application/json"
+            storageRef.putData(jsonData, metadata: fileType) { (metadata, error) in
+                guard metadata != nil else {
+                    // Uh-oh, an error occurred!
+                    print("could not upload meta data to firebase", error!.localizedDescription)
+                    return
                 }
+                print("Successfully uploaded log!", storageRef.fullPath)
+            }
+         
+            // How to specify where these get uploaded (Create folder for data so it doesn't clog up central bucket)
+            // How often can we upload this stuff/how big are these uploads? Don't want to overflow data limitations
+            return storageRef.fullPath
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    private func getBestAlignmentCrumb(cameraGeoSpatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4, anchors: [GARAnchor])->(GARAnchor, LocationInfoGeoSpatial)? {
+        let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
+        
+        var accurateGeoSpatialCrumbMap: [UUID: LocationInfoGeoSpatial] = [:]
+        for geoCrumb in accurateGeoSpatialCrumbs {
+            if let GARAnchorUUID = geoCrumb.GARAnchorUUID {
+                accurateGeoSpatialCrumbMap[GARAnchorUUID] = geoCrumb
             }
         }
-        
-        func session(_ session: ARSession, didUpdate frame: ARFrame) {
-            do {
-                ARFrameStatusAdapter.adjustTrackingStatus(frame)
-                let garFrame = try garSession?.update(frame)
-                for gAnchor in garFrame?.updatedAnchors ?? [] {
-                    delegate?.didUpdate(garAnchor: gAnchor)
-                }
-                self.currentGARFrame = garFrame
-                // shift positions of cloud anchor nodes
-                cloudNodeUpdater.async {
-                    if !self.visualizeCloudAnchors {
-                        return
-                    }
-                    for gAnchor in garFrame?.updatedAnchors ?? [] {
-                        if let cloudIdentifier = gAnchor.cloudIdentifier, gAnchor.hasValidTransform, let existingNode = self.cloudAnchorSCNNodes[cloudIdentifier] {
-                            existingNode.simdTransform = gAnchor.transform
-                        }
-                    }
-                }
-                // don't use Cloud Anchors if we have localized with the ARWorldMap
-                if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
-                    checkForCloudAnchorAlignment(anchors: gAnchors)
-                }
-                
-                if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
-                    if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
-                        lastGeospatialLogTime = Date()
-                        PathLogger.shared.logGeospatialTransform(geospatialTransform)
-                    }
-                    self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
-                    delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
-                    if localization == .none {
-                        checkForGeoAlignment(geospatialTransform: geospatialTransform, cameraWorldTransform: frame.camera.transform)
-                    }
-                }
-            } catch {
-                print("couldn't update GAR Frame")
-            }
-            // TODO: test for alignment based on geospatial transform
-            ARData.shared.set(transform: frame.camera.transform)
-            if let keypointRenderJob = keypointRenderJob {
-                keypointRenderJob()
-                self.keypointRenderJob = nil
-            }
-            if let pathRenderJob = pathRenderJob {
-                pathRenderJob()
-                self.pathRenderJob = nil
-            }
-            for intermediateAnchorRenderJob in intermediateAnchorRenderJobs {
-                if let renderJob = intermediateAnchorRenderJob.1 {
-                    renderJob()
-                    intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
-                }
-            }
-            
-            let imageAnchors = frame.anchors.compactMap({$0 as? ARImageAnchor})
-            if !imageAnchors.isEmpty {
-                delegate?.receivedImageAnchors(imageAnchors: imageAnchors)
-            }
+        let currentAccurateGeoAnchors = anchors.filter({ accurateGeoSpatialCrumbMap[$0.identifier] != nil && $0.hasValidTransform })
+        let worldPos = cameraWorldTransform.columns.3
+        guard let bestGeospatialRecordingAnchor = currentAccurateGeoAnchors.min(by: { simd_distance($0.transform.columns.3, worldPos) < simd_distance($1.transform.columns.3, worldPos) }) else {
+            return nil
+        }
+        return (bestGeospatialRecordingAnchor, accurateGeoSpatialCrumbMap[bestGeospatialRecordingAnchor.identifier]!)
+    }
+    
+    func checkForGeoAlignment(geospatialTransform: GARGeospatialTransform, cameraWorldTransform: simd_float4x4) {
+        guard geospatialTransform.trackingQuality.isAsGoodOrBetterThan( outdoorLocalizationQualityThreshold), let GARAnchors = self.currentGARFrame?.anchors else {
+            return
+        }
+        guard let (alignmentAnchor, geoSpatialAlignmentCrumb) = getBestAlignmentCrumb(cameraGeoSpatialTransform: geospatialTransform, cameraWorldTransform: cameraWorldTransform, anchors: GARAnchors) else {
+            return
         }
         
-        /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
-        /// - Parameters:
-        ///   - session: the AR session associated with the change in tracking state
-        ///   - camera: the AR camera associated with the change in tracking state
-        func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-            var logString: String? = nil
-
-            switch camera.trackingState {
-            case .limited(let reason):
-                switch reason {
-                case .excessiveMotion:
-                    logString = "ExcessiveMotion"
-                    delegate?.trackingErrorOccurred(.excessiveMotion)
-                case .insufficientFeatures:
-                    logString = "InsufficientFeatures"
-                    delegate?.trackingErrorOccurred(.insufficientFeatures)
-                case .initializing:
-                    // don't log anything
-                    print("initializing")
-                case .relocalizing:
-                    sessionWasRelocalizing = true
-                    delegate?.sessionInitialized()
-                    delegate?.sessionRelocalizing()
-                @unknown default:
-                    print("An error condition arose that we didn't know about when the app was last compiled")
-                }
-            case .normal:
-                logString = "Normal"
-                delegate?.sessionInitialized()
-                delegate?.trackingIsNormal()
-                if sessionWasRelocalizing {
-                    if localization == .none {
-                        delegate?.sessionDidRelocalize()
-                    }
-                    localization = .withARWorldMap
-                    manualAlignment = matrix_identity_float4x4
-                    legacyHandleRelocalization()
-                }
-                print("normal")
-            case .notAvailable:
-                logString = "NotAvailable"
-                print("notAvailable")
-            }
-            if let logString = logString, let recordingPhase = delegate?.isRecording() {
-                PathLogger.shared.logTrackingError(isRecordingPhase: recordingPhase, trackingError: logString)
+        if let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
+            self.manualAlignment = manualAlignment
+            print("self.manualAlignment \(self.manualAlignment)")
+            delegate?.didDoGeoAlignment()
+        }
+    }
+    
+    private func checkForCloudAnchorAlignment(anchors: [GARAnchor]) {
+        for anchor in anchors {
+            if anchor.hasValidTransform, let correspondingARAnchor = sessionCloudAnchors[anchor.identifier], anchor.cloudIdentifier == lastResolvedCloudAnchorID  {
+                manualAlignment = anchor.transform.alignY() * correspondingARAnchor.transform.inverse.alignY()
             }
         }
-        
-        func legacyHandleRelocalization() {
-            removeNavigationNodes()
-            guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), let showPath = delegate?.getShowPath() else {
-                return
+    }
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        do {
+            ARFrameStatusAdapter.adjustTrackingStatus(frame)
+            let garFrame = try garSession?.update(frame)
+            for gAnchor in garFrame?.updatedAnchors ?? [] {
+                delegate?.didUpdate(garAnchor: gAnchor)
             }
-            if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
-                let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
-                renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
-                if showPath {
-                    renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
-                }
-            }
-            for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
-                ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
-            }
-        }
-        
-        private func createSCNNodeFor(identifier: String, at: simd_float4x4) {
-            if !visualizeCloudAnchors{
-                return
-            }
+            self.currentGARFrame = garFrame
+            // shift positions of cloud anchor nodes
             cloudNodeUpdater.async {
-                let newNode = SCNNode(geometry: SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.1))
-                
-                newNode.simdTransform = at
-                newNode.geometry?.firstMaterial!.diffuse.contents = UIColor.green
-                self.cloudAnchorSCNNodes[identifier] = newNode
-                self.sceneView.scene.rootNode.addChildNode(newNode)
+                if !self.visualizeCloudAnchors {
+                    return
+                }
+                for gAnchor in garFrame?.updatedAnchors ?? [] {
+                    if let cloudIdentifier = gAnchor.cloudIdentifier, gAnchor.hasValidTransform, let existingNode = self.cloudAnchorSCNNodes[cloudIdentifier] {
+                        existingNode.simdTransform = gAnchor.transform
+                    }
+                }
+            }
+            // don't use Cloud Anchors if we have localized with the ARWorldMap
+            if localization != .withARWorldMap, let gAnchors = currentGARFrame?.anchors {
+                checkForCloudAnchorAlignment(anchors: gAnchors)
+            }
+            
+            if let geospatialTransform = self.currentGARFrame?.earth?.cameraGeospatialTransform {
+                if -lastGeospatialLogTime.timeIntervalSinceNow > 0.3 {
+                    lastGeospatialLogTime = Date()
+                    PathLogger.shared.logGeospatialTransform(geospatialTransform)
+                }
+                self.worldTransformGeoSpatialPair = (frame.camera.transform, geospatialTransform)
+                delegate?.didReceiveFrameWithTrackingQuality(geospatialTransform.trackingQuality)
+                if localization == .none {
+                    checkForGeoAlignment(geospatialTransform: geospatialTransform, cameraWorldTransform: frame.camera.transform)
+                }
+            }
+        } catch {
+            print("couldn't update GAR Frame")
+        }
+        // TODO: test for alignment based on geospatial transform
+        ARData.shared.set(transform: frame.camera.transform)
+        if let keypointRenderJob = keypointRenderJob {
+            keypointRenderJob()
+            self.keypointRenderJob = nil
+        }
+        if let pathRenderJob = pathRenderJob {
+            pathRenderJob()
+            self.pathRenderJob = nil
+        }
+        for intermediateAnchorRenderJob in intermediateAnchorRenderJobs {
+            if let renderJob = intermediateAnchorRenderJob.1 {
+                renderJob()
+                intermediateAnchorRenderJobs[intermediateAnchorRenderJob.0] = nil
             }
         }
         
+        let imageAnchors = frame.anchors.compactMap({$0 as? ARImageAnchor})
+        if !imageAnchors.isEmpty {
+            delegate?.receivedImageAnchors(imageAnchors: imageAnchors)
+        }
+    }
+    
+    /// Called when there is a change in tracking state.  This is important for both announcing tracking errors to the user and also to triggering some app state transitions.
+    /// - Parameters:
+    ///   - session: the AR session associated with the change in tracking state
+    ///   - camera: the AR camera associated with the change in tracking state
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        var logString: String? = nil
+
+        switch camera.trackingState {
+        case .limited(let reason):
+            switch reason {
+            case .excessiveMotion:
+                logString = "ExcessiveMotion"
+                delegate?.trackingErrorOccurred(.excessiveMotion)
+            case .insufficientFeatures:
+                logString = "InsufficientFeatures"
+                delegate?.trackingErrorOccurred(.insufficientFeatures)
+            case .initializing:
+                // don't log anything
+                print("initializing")
+            case .relocalizing:
+                sessionWasRelocalizing = true
+                delegate?.sessionInitialized()
+                delegate?.sessionRelocalizing()
+            @unknown default:
+                print("An error condition arose that we didn't know about when the app was last compiled")
+            }
+        case .normal:
+            logString = "Normal"
+            delegate?.sessionInitialized()
+            delegate?.trackingIsNormal()
+            if sessionWasRelocalizing {
+                if localization == .none {
+                    delegate?.sessionDidRelocalize()
+                }
+                localization = .withARWorldMap
+                manualAlignment = matrix_identity_float4x4
+                legacyHandleRelocalization()
+            }
+            print("normal")
+        case .notAvailable:
+            logString = "NotAvailable"
+            print("notAvailable")
+        }
+        if let logString = logString, let recordingPhase = delegate?.isRecording() {
+            PathLogger.shared.logTrackingError(isRecordingPhase: recordingPhase, trackingError: logString)
+        }
+    }
+    
+    func legacyHandleRelocalization() {
+        removeNavigationNodes()
+        guard let defaultColor = delegate?.getKeypointColor(), let defaultPathColor = delegate?.getPathColor(), let showPath = delegate?.getShowPath() else {
+            return
+        }
+        if let nextKeypoint = RouteManager.shared.nextKeypoint, let cameraTransform = ARSessionManager.shared.currentFrame?.camera.transform {
+            let previousKeypointLocation = RouteManager.shared.getPreviousKeypoint(to: nextKeypoint)?.location ?? LocationInfo(transform: cameraTransform)
+            renderKeypoint(nextKeypoint.location, defaultColor: defaultColor)
+            if showPath {
+                renderPath(nextKeypoint.location, previousKeypointLocation, defaultPathColor: defaultPathColor)
+            }
+        }
+        for intermediateAnchorPoint in RouteManager.shared.intermediateAnchorPoints {
+            ARSessionManager.shared.render(intermediateAnchorPoints: [intermediateAnchorPoint])
+        }
+    }
+    
+    private func createSCNNodeFor(identifier: String, at: simd_float4x4) {
+        if !visualizeCloudAnchors{
+            return
+        }
+        cloudNodeUpdater.async {
+            let newNode = SCNNode(geometry: SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.1))
+            
+            newNode.simdTransform = at
+            newNode.geometry?.firstMaterial!.diffuse.contents = UIColor.green
+            self.cloudAnchorSCNNodes[identifier] = newNode
+            self.sceneView.scene.rootNode.addChildNode(newNode)
+        }
     }
 }
 
