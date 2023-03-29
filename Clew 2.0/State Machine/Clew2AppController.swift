@@ -29,6 +29,12 @@ class Clew2AppController: AppController {
     public var arViewer: ARViewController? // Initialized in ARView.swift
     var cloudAnchorType: String // door, 
     
+    // state of whether the current app is in the process of leaving the app
+    public var exitingMap = false
+    
+    // counter incremented each time a graph is rendered in a new AR frame
+    public var countFrame: Int = 0
+    
     func initialize() {
         Clew2AppController.shared.arViewer?.initialize()
         Clew2AppController.shared.arViewer?.setupPing()
