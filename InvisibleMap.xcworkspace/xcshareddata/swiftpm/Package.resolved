@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "arcore-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google-ar/arcore-ios-sdk",
+      "state" : {
+        "revision" : "03978f8995dedc66773c59ad823aa825f8856a6b",
+        "version" : "1.36.0"
+      }
+    },
+    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
@@ -23,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
       "state" : {
-        "revision" : "111d8d6ad1a1afd6c8e9561d26e55ab1e74fcb42",
-        "version" : "8.15.0"
+        "branch" : "master",
+        "revision" : "3318bdab0917aa51596db9719e8f7b3333603cee"
       }
     },
     {
@@ -32,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "ef819db8c58657a6ca367322e73f3b6322afe0a2",
-        "version" : "8.15.0"
+        "revision" : "04351180d4c757c6c16127cb57b685fff9ef260b",
+        "version" : "10.6.0"
       }
     },
     {
@@ -41,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "b905c49326b72211531ed9d7baa02d724828a8dc",
-        "version" : "9.1.4"
+        "revision" : "f6b558e3f801f2cac336b04f615ce111fa9ddaa0",
+        "version" : "9.2.1"
       }
     },
     {
@@ -50,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "f4abe56ce62a779e64b525eb133c8fc2a84bbc1f",
-        "version" : "7.7.1"
+        "revision" : "0543562f85620b5b7c510c6bcbef75b562a5127b",
+        "version" : "7.11.0"
       }
     },
     {
@@ -68,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "4e9bbf2808b8fee444e84a48f5f3c12641987d3e",
-        "version" : "1.7.2"
+        "revision" : "96d7cc73a71ce950723aa3c50ce4fb275ae180b8",
+        "version" : "3.1.0"
       }
     },
     {
@@ -86,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
       "state" : {
-        "revision" : "7ee9ef9f627d85cbe1b8c4f49a3ed26eed216c77",
-        "version" : "2.30908.0"
+        "revision" : "819d0a2173aff699fb8c364b6fb906f7cdb1a692",
+        "version" : "2.30909.0"
       }
     },
     {

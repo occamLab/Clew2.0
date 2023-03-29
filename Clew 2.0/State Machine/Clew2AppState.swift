@@ -50,7 +50,7 @@ indirect enum Clew2AppState: StateType {
         
         // CreateARView events
         case DropGeospatialAnchorRequested
-        case DropCloudAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform) // POI cloud anchors
+        case DropPOIAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform) // POI cloud anchors
         case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case ViewPOIsRequested
@@ -62,6 +62,10 @@ indirect enum Clew2AppState: StateType {
         case LeaveMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
+        // resolving anchors
+        case ResolvePOIAnchorRequested
+        case ResolveDoorAnchorRequested
+        case ResolveStairAnchorRequested
         case EndpointReached(finalEndpoint: Bool)
         case RateMapRequested(mapName: String)
         case HomeScreenRequested
@@ -102,7 +106,7 @@ indirect enum Clew2AppState: StateType {
 
         //case LoadAndCategorizeMap(mapName: String) // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
         case DropGeospatialAnchor
-        case DropCloudAnchor
+        case DropPOIAnchor
         case DropDoorAnchor
         case DropStairAnchor
         case ViewPOIs
@@ -112,6 +116,12 @@ indirect enum Clew2AppState: StateType {
         
         // NavigateARView commands
         case LeaveMap(mapName: String)
+        
+        // resolving anchors
+        case ResolvePOIAnchor
+        case ResolveDoorAnchor
+        case ResolveStairAnchor
+        
         case PlanPath
         case UpdateInstructionText
         case UpdatePoseVIO(cameraFrame: ARFrame)
@@ -190,7 +200,7 @@ enum CreateARViewState: StateType {
     // All the effectual inputs from the app which CreateMapState can react to
     enum Event {
         case DropGeospatialAnchorRequested // anchors outside the establishment
-        case DropCloudAnchorRequested // cloud anchors are both breadcrumbs and can be named as POIs - need to figure out the time interval at which it should be dropped or if we should make users drop it frequently and name those that they want to
+        case DropPOIAnchorRequested // cloud anchors are both breadcrumbs and can be named as POIs - need to figure out the time interval at which it should be dropped or if we should make users drop it frequently and name those that they want to
         case DropDoorAnchorRequested
         case DropStairAnchorRequested
         case ViewPOIsRequested
@@ -213,9 +223,9 @@ enum CreateARViewState: StateType {
         case (.CreateARView, .DropGeospatialAnchorRequested):
             self = .CreateARView
             return [.DropGeospatialAnchor]
-        case (.CreateARView, .DropCloudAnchorRequested):
+        case (.CreateARView, .DropPOIAnchorRequested):
             self = .CreateARView
-            return [.DropCloudAnchor]
+            return [.DropPOIAnchor]
         case (.CreateARView, .DropDoorAnchorRequested):
             self = .DropDoorAnchorState
             return [.DropDoorAnchor]
@@ -259,7 +269,13 @@ enum NavigateARViewState: StateType {
         case LeaveMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
-        case EndpointReached (mapName: String)
+        
+        // resolving anchors
+        case ResolvePOIAnchorRequested
+        case ResolveDoorAnchorRequested
+        case ResolveStairAnchorRequested
+        
+        case EndpointReached (mapName: String) // cloud anchor resolved
         case HomeScreenRequested
         case POIScreenRequested(mapName: String)
         case RateMapRequested(mapName: String)

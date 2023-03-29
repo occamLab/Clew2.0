@@ -108,7 +108,8 @@ class MapRecorder: MapRecorderController, ObservableObject {
         }
         
         let mapJsonFile: [String: Any] = ["map_id": mapId, "pose_data": poseData, "tag_data": tagData, "location_data": locationData, "plane_data": planeDataList]
-        
+        // TODO: create var for cloudanchor json file - list of dictionaries of cloud anchor id with its associated type
+        // Note: cloud anchors only last for a day, max a year 
         let folderPath = "rawMapData/" + String(describing: Auth.auth().currentUser!.uid)
         let imagePath = folderPath + "/" + mapId + ".jpg"
         let filePath = folderPath + "/" + mapId + ".json"

@@ -69,11 +69,7 @@ class ARView: UIViewController {
     var pathNodes: [String: (SCNNode, Bool)] = [:]
     let memoryChecker : MemoryChecker = MemoryChecker()
     let configuration = ARWorldTrackingConfiguration()
-    #if IS_MAP_CREATOR
-        let sharedController = InvisibleMapCreatorController.shared
-    #else
-        let sharedController = InvisibleMapController.shared
-    #endif
+    let sharedController = Clew2AppController.shared
     let recordInterval = 0.1
     var lastRecordedTimestamp = -0.1
     let distanceToAnnounceWaypoint: Float = 1.5
@@ -172,7 +168,7 @@ class ARView: UIViewController {
     }
     
     /// AR Session Configuration
-    private var configuration: ARWorldTrackingConfiguration!
+   // private var configuration: ARWorldTrackingConfiguration!  // declared above
     
     /// SCNNode of the next keypoint
     private var keypointNode: SCNNode?
@@ -216,6 +212,9 @@ class ARView: UIViewController {
     var lastResolvedCloudAnchorID: String?
     
     // TODO: we could have used String instead of NSString (be careful of breaking existing routes though)
+    // tells ARSessionManager the cloud anchors it should expect to find
+    // cloud anchors loaded for the particular route user is on
+    // send the data to backend to populate the route and get the data back from backend (to return the cloud anchor positions to frontend)
     var cloudAnchorsForAlignment: [NSString: ARAnchor] = [:] {
         didSet {
             sessionCloudAnchors = [:]
@@ -288,6 +287,7 @@ class ARView: UIViewController {
     }
     
     /// Creating cloud anchor using an existing local ARAnchor
+    // TODO: MapRecorder can keep a dictionary of the cloud anchor id that's associated with its type (needs to get stored in firebase in json file)
     func hostCloudAnchor(withTransform transform: simd_float4x4)->(GARAnchor, ARAnchor)? {
         let newAnchor = ARAnchor(transform: transform)
         add(anchor: newAnchor)
@@ -323,7 +323,7 @@ extension ARView: ARSessionDelegate {
         #else
             //if we are in preparingtoleavemap state then break out of this session
             let processingFrame = self.sharedController.mapNavigator.processingFrame
-            let exitingMap = InvisibleMapController.shared.exitingMap
+            let exitingMap = Clew2AppController.shared.exitingMap
         #endif
         print("Exiting map: \(exitingMap)")
         // start processing frame if frame is not processing yet after 0.1 seconds
@@ -518,7 +518,7 @@ extension ARView: ARSessionDelegate {
         // TODO: test for alignment based on geospatial transform
         ARData.shared.set(transform: frame.camera.transform)
         if let keypointRenderJob = keypointRenderJob {
-            keypointRenderJob()
+            keypointRenderJob()  // keypoints are the red markers visualized; scene nodes are shifted around relative to the coord system of current position
             self.keypointRenderJob = nil
         }
         if let pathRenderJob = pathRenderJob {
@@ -657,7 +657,7 @@ extension ARView: ARViewController {
     func detectTag(tag: AprilTags, cameraTransform: simd_float4x4, snapTagsToVertical: Bool) {
         DispatchQueue.main.async {
             #if !IS_MAP_CREATOR
-            guard let map = InvisibleMapController.shared.mapNavigator.map else {
+            guard let map = Clew2AppController.shared.mapNavigator.map else {
                 return
             }
             #endif
@@ -693,8 +693,8 @@ extension ARView: ARViewController {
                 map.aprilTagDetectionDictionary[Int(tag.number)] = aprilTagTracker
             
             #else
-            let aprilTagTracker = InvisibleMapCreatorController.shared.mapRecorder.aprilTagDetectionDictionary[Int(tag.number), default: AprilTagTracker(self.arView, tagId: Int(tag.number))]
-            InvisibleMapCreatorController.shared.mapRecorder.aprilTagDetectionDictionary[Int(tag.number)] = aprilTagTracker
+            let aprilTagTracker = Clew2AppController.shared.mapRecorder.aprilTagDetectionDictionary[Int(tag.number), default: AprilTagTracker(self.arView, tagId: Int(tag.number))]
+            Clew2AppController.shared.mapRecorder.aprilTagDetectionDictionary[Int(tag.number)] = aprilTagTracker
             #endif
             
             // TODO: need some sort of logic to discard old detections.  One method that seems good would be to add some process noise (Q_k non-zero)
@@ -862,6 +862,7 @@ extension ARView: ARViewController {
     /// start the AR session for Cloud anchors
     private func startGARSession() {
         do {
+            // TODO: get garAPIKey from Slack
             garSession = try GARSession(apiKey: garAPIKey, bundleIdentifier: nil)
             var error: NSError?
             let GARconfiguration = GARSessionConfiguration()
@@ -987,7 +988,7 @@ extension ARView: ARViewController {
                 
                 #if !IS_MAP_CREATOR
                 if simd_distance(simd_float3(cameraPosConverted), simd_float3(endpointVertex.translation.x, endpointVertex.translation.y, endpointVertex.translation.z)) < self.sharedController.mapNavigator.endpointSphere {
-                    InvisibleMapController.shared.process(event: .EndpointReached(finalEndpoint: true))
+                    Clew2AppController.shared.process(event: .EndpointReached(finalEndpoint: true))
                     NavigateGlobalStateSingleton.shared.endPointReached = true
                     print("Reached endpoint")
                 } else {
@@ -1185,13 +1186,21 @@ extension ARView: ARViewController {
 }
 
 extension ARView: GARSessionDelegate {
+    // GARAnchor handles resolving and this function called when resolved
     func session(_ session: GARSession, didResolve anchor:GARAnchor) {
         if localization == .withARWorldMap {
             // defer to the ARWorldMap
             return
         }
         if localization == .none {
-            delegate?.sessionDidRelocalize()
+            // TODO: cloud anchor resolved
+            // resolved an endpoint cloud anchor (POI, door, stair)
+            // TODO: may need different events for resolving the different type of cloud anchor endpoints, also need to consider resolving cloud anchors that aren't endpoints (just breadcrumbs that're dropped every few ft or seconds)
+            Clew2AppController.shared.process(event: .EndpointReached(finalEndpoint: true)) // process this command in ResolvePOIAnchor command
+            NavigateGlobalStateSingleton.shared.didCloudAnchorResolved = true
+            Clew2AppController.shared.cloudAnchorType = "" // TODO: need to associate hosted cloud anchors with a anchor type
+            NavigateGlobalStateSingleton.shared.endPointReached = true
+           // delegate?.sessionDidRelocalize()
         }
         localization = .withCloudAnchors
         if let cloudIdentifier = anchor.cloudIdentifier, anchor.hasValidTransform, let alignTransform = cloudAnchorsForAlignment[NSString(string: cloudIdentifier)]?.transform {
@@ -1209,13 +1218,14 @@ extension ARView: GARSessionDelegate {
             // Note: lets delegate know that change has been made (passes along the info it got)
             
             if (Clew2AppController.shared.cloudAnchorType == "POI") {
-                Clew2AppController.shared.process(event: .DropCloudAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform))
+                Clew2AppController.shared.process(event: .DropCloudAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform)) // transform uses the coord system relative to the current ARSession (phone position
+                // TODO: need this information in the json file (cloudID, transform, poseID, associated type) for each cloud anchor created
             } else if (Clew2AppController.shared.cloudAnchorType == "door") {
                 Clew2AppController.shared.process(event: .DropDoorAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform))
             } else if (Clew2AppController.shared.cloudAnchorType == "stair") {
                 Clew2AppController.shared.process(event: .DropStairAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: garAnchor.transform))
             }
-            // ask: why do we need this node
+            // visualizing the cloud anchor (renderer) - green thingy; mostly a debugging tool
             createSCNNodeFor(identifier: cloudIdentifier, at: garAnchor.transform)
         }
     }
