@@ -56,16 +56,14 @@ indirect enum Clew2AppState: StateType {
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
-        case CancelMapRequested
+        case LeaveMapRequested
         
         // NavigateARView events
         case LeaveMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
         // resolving anchors
-        case ResolvePOIAnchorRequested
-        case ResolveDoorAnchorRequested
-        case ResolveStairAnchorRequested
+        case ResolvedCloudAnchor
         case EndpointReached(finalEndpoint: Bool)
         case RateMapRequested(mapName: String)
         case HomeScreenRequested
@@ -111,16 +109,14 @@ indirect enum Clew2AppState: StateType {
         case DropStairAnchor
         case ViewPOIs
         case NamePOI
-        case SaveMap(mapName: String)
-        case CancelMap(mapName: String)
+        case SaveMapToFirebase(mapName: String)
+        case LeaveMap(mapName: String)
         
         // NavigateARView commands
         case LeaveMap(mapName: String)
         
         // resolving anchors
-        case ResolvePOIAnchor
-        case ResolveDoorAnchor
-        case ResolveStairAnchor
+        case ResolvedCloudAnchor
         
         case PlanPath
         case UpdateInstructionText
@@ -206,7 +202,7 @@ enum CreateARViewState: StateType {
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
-        case CancelMapRequested(mapName: String)
+        case LeaveMapRequested(mapName: String)
         
         // frame handling events
         case NewARFrame(cameraFrame: ARFrame) // to update AR screen during map creation
@@ -237,10 +233,10 @@ enum CreateARViewState: StateType {
             return [.ViewPOIs]
         case (.CreateARView, .SaveMapRequested(let mapName))
             self = .POIScreen
-            return [.SaveMap(mapName: mapName)]
-        case (.CreateARView, .CancelMapRequested(let mapName))
+            return [.SaveMapToFirebase(mapName: mapName)]
+        case (.CreateARView, .LeaveMapRequested(let mapName))
             self = .POIScreen
-            return [.CancelMap(mapName: mapName)]
+            return [.LeaveMap(mapName: mapName)]
         default: break
         }
         return []
@@ -270,12 +266,7 @@ enum NavigateARViewState: StateType {
         case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
         
-        // resolving anchors
-        case ResolvePOIAnchorRequested
-        case ResolveDoorAnchorRequested
-        case ResolveStairAnchorRequested
-        
-        case EndpointReached (mapName: String) // cloud anchor resolved
+        case EndpointReached (mapName: String) // POI cloud anchor resolved
         case HomeScreenRequested
         case POIScreenRequested(mapName: String)
         case RateMapRequested(mapName: String)

@@ -199,7 +199,7 @@ class ARView: UIViewController {
         didSet {
             let accurateGeoSpatialCrumbs = geoSpatialAlignmentCrumbs.filter( {$0.headingUncertainty < GARGeospatialTransform.excellentQualityHeadingAccuracy && $0.altitudeUncertainty < GARGeospatialTransform.excellentQualityAltitudeAccuracy && $0.horizontalUncertainty < GARGeospatialTransform.excellentQualityHorizontalAccuracy } )
             for crumb in accurateGeoSpatialCrumbs {
-                if let newAnchor = addGeoSpatialAnchor(location: crumb) {
+                if let newAnchor = dropGeoSpatialAnchor(location: crumb) {
                     crumb.GARAnchorUUID = newAnchor.identifier
                 }
             }
@@ -302,7 +302,7 @@ class ARView: UIViewController {
     }
     
     /// creating a geospatial anchor
-    func addGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
+    func dropGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
         let headingAngle = (Double.pi / 180) * (180.0 - location.heading);
         let eastUpSouthQAnchor = simd_quaternion(Float(headingAngle), simd_float3(0, 1, 0));
         do {
@@ -1196,10 +1196,8 @@ extension ARView: GARSessionDelegate {
             // TODO: cloud anchor resolved
             // resolved an endpoint cloud anchor (POI, door, stair)
             // TODO: may need different events for resolving the different type of cloud anchor endpoints, also need to consider resolving cloud anchors that aren't endpoints (just breadcrumbs that're dropped every few ft or seconds)
-            Clew2AppController.shared.process(event: .EndpointReached(finalEndpoint: true)) // process this command in ResolvePOIAnchor command
             NavigateGlobalStateSingleton.shared.didCloudAnchorResolved = true
             Clew2AppController.shared.cloudAnchorType = "" // TODO: need to associate hosted cloud anchors with a anchor type
-            NavigateGlobalStateSingleton.shared.endPointReached = true
            // delegate?.sessionDidRelocalize()
         }
         localization = .withCloudAnchors

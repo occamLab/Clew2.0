@@ -27,7 +27,7 @@ class Clew2AppController: AppController {
     
     // controllers for both navigate and create
     public var arViewer: ARViewController? // Initialized in ARView.swift
-    var cloudAnchorType: String // door, 
+    var cloudAnchorType: String // door, stair, POI
     
     // state of whether the current app is in the process of leaving the app
     public var exitingMap = false
@@ -43,22 +43,93 @@ class Clew2AppController: AppController {
     func process(commands: [Clew2AppState.Command]) {
         for command in commands {
             switch commands {
-                // MapRecorder commands
-    
+                // HomeScreen commands
+            case .NameMap(let mapName):
+            case .LoadFamilyScreen:
                 
-                // RecordViewer commands
+                // FamilyScreen commands
+            case .LoadLocationScreen:
                 
+                // Location Screen commands
+            case .LoadPOIScreen(mapName: String):
                 
-                // MapDatabase commands
+                // POIScreen commands
+            case .LoadReviews(mapName: String):
+            case .StartNavigation(mapName: String):
+            case .LoadPreviewDirections:
+                // ReviewsScreen commands TBD
+                // PreviewDirectionScreen commands TBD
+                //NameMapScreen commands TBD
+            case .StartCreation(mapName: String):
                 
+                // CreateARView commands
+            case .LocateAndCategorizeMap: // user uses GPS to automatically categorize the map - map still needs to be named
+            case .LoadAndCategorizeMap(mapName: String): // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
+               
+            // MapRecorder and RecordMapView commands
+            case .DropGeospatialAnchor:
+                self.arViewer?.dropGeoSpatialAnchor() //TODO: need location argument
+                Clew2AppController.shared.mapRecorder.geospatialAnchorWasRecorded = true
                 
-                // MapNavigator commands
+            case .DropPOIAnchor:
+                self.arViewer?.hostCloudAnchor() //TODO: need transform argument
+                Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
+                Clew2AppController.shared.cloudAnchorType = "POI"
                 
+            case .DropDoorAnchor:
+                self.arViewer?.hostCloudAnchor() //TODO: need transform argument
+                Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
+                Clew2AppController.shared.cloudAnchorType = "door"
                 
-                // NavigateViewer commands
+            case .DropStairAnchor:
+                self.arViewer?.hostCloudAnchor() //TODO: need transform argument
+                Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
+                Clew2AppController.shared.cloudAnchorType = "stair"
                 
+            case .ViewPOIs(let mapName):
+                // viewing POIs dropped during creation of map
+                process(commands: [.LoadPOIScreen(mapName: mapName)])
                 
-                // ARViewer commands
+            case .NamePOI: //TODO: after dropping POI during creation, name the POI, store it in some dictionary? put into Firebase?
+                // ask: how to save this in Firebase
+                
+            case .SaveMapToFirebase(mapName: String):
+                Clew2AppController.shared.mapRecorder.sendToFirebase(mapName: mapName)
+            
+            // NavigateARView commands
+            case .LeaveMap(mapName: String):
+                self.arViewer?.resetNavigatingSession()
+                self.mapNavigator.resetMap() // destroys the map
+                self.exitingMap = false
+                print("leave map")
+                //TODO: need to process command that loads the page with list of destinations (POIs) before navigating or creating view
+            
+            // TODO: need a case that continuously resolves cloud anchors (breadcrumbs for the path)
+            // route anchors are nameless cloud anchors that're dropped every x seconds or every x feet (just like breadcrumbs in Clew)
+            case .ResolvedCloudAnchor:
+                // ask: arview session that resolves cloud anchors - how do we call this?
+                // the session will mark the anchorType var in the session
+     
+            case .PlanPath:
+                if let cameraNode = arViewer?.cameraNode {
+                        let cameraPos = arViewer!.convertNodeOrigintoMapFrame(node: cameraNode)
+                        let stops = self.mapNavigator.planPath(from: simd_float3(cameraPos!.x, cameraPos!.y, cameraPos!.z))
+                            if let stops = stops {
+                                self.arViewer!.renderGraph(fromStops: stops)
+                                countFrame += 1
+                            }
+                        }
+                
+            case .UpdateInstructionText:
+                navigateViewer?.updateInstructionText()
+                print("updated instruction text")
+                
+            case .UpdatePoseVIO(cameraFrame: ARFrame)
+            case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4)
+            
+            case .ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
+            case .LoadEndPopUp(mapName: String)
+            case .LoadRatePopUp(mapName: String)
             }
         }
     }
