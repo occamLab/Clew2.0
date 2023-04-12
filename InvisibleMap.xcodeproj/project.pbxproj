@@ -97,7 +97,22 @@
 		98211CA3287258E60027860B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA1287258E60027860B /* SettingsView.swift */; };
 		98211CA528725A620027860B /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA428725A620027860B /* FeedbackView.swift */; };
 		98211CA628725A620027860B /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA428725A620027860B /* FeedbackView.swift */; };
-		984C21CB26B445C9006EEF4F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 984C21CA26B445C9006EEF4F /* GoogleService-Info.plist */; };
+		9843BE5D29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */; };
+		9843BE5E29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */; };
+		9843BE5F29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */; };
+		9843BE6029E0CA6400733EE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */; };
+		9843BE6629E0CE9300733EE8 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9718F2703AC9600DEB00A /* Map.swift */; };
+		9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 868CBA4C2113394B007343B4 /* TagFinder.mm */; };
+		9843BE6829E0CEAD00733EE8 /* ImageDisplay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 868CBA4721133939007343B4 /* ImageDisplay.mm */; };
+		9843BE6929E0CEB100733EE8 /* ImageConversion.mm in Sources */ = {isa = PBXBuildFile; fileRef = 868CBA4521133939007343B4 /* ImageConversion.mm */; };
+		9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F64364E269DDD08007BD526 /* MemoryChecker.m */; };
+		9843BE6B29E0CEB800733EE8 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F131D71271F5FCC00568FEC /* FirebaseManager.swift */; };
+		9843BE6C29E0CEBB00733EE8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83DB69272C7AE800D0148F /* Utils.swift */; };
+		9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7412624229600230A58 /* ContentView.swift */; };
+		9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83DB71273F02C100D0148F /* BaseNavigationView.swift */; };
+		9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9BE972756BAE9001B5A2B /* ViewStructs.swift */; };
+		9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AB32864FECB009E808C /* MenuView.swift */; };
+		9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141497E52645A41700BF0ABC /* InstructionOverlay.swift */; };
 		984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86F39545210FA42600F209EC /* Assets.xcassets */; };
 		984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */; };
 		984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21D126B44F4D006EEF4F /* FirebaseStorage */; };
@@ -218,7 +233,7 @@
 		98211C9D28724C5A0027860B /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		98211CA1287258E60027860B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		98211CA428725A620027860B /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
-		984C21CA26B445C9006EEF4F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		98503DFC29D4C882003428AD /* ARCoreKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCoreKey.swift; sourceTree = "<group>"; };
 		986A29172997FD3700879BCF /* Clew 2.0.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Clew 2.0.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		986A29182997FD3700879BCF /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
@@ -323,7 +338,7 @@
 		1447B704262421CC00230A58 /* InvisibleMapCreator2 */ = {
 			isa = PBXGroup;
 			children = (
-				984C21CA26B445C9006EEF4F /* GoogleService-Info.plist */,
+				86A84771210FA6440004C325 /* GoogleService-Info.plist */,
 				1F32376526AEF09D008B9A11 /* InvisibleMapCreator2.entitlements */,
 				1447B705262421CC00230A58 /* InvisibleMapCreator2App.swift */,
 				1447B7402624227E00230A58 /* Views */,
@@ -533,7 +548,7 @@
 				86F39547210FA42600F209EC /* LaunchScreen.storyboard */,
 				86F39545210FA42600F209EC /* Assets.xcassets */,
 				86F3954A210FA42600F209EC /* Info.plist */,
-				86A84771210FA6440004C325 /* GoogleService-Info.plist */,
+				9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */,
 			);
 			path = InvisibleMap;
 			sourceTree = "<group>";
@@ -796,7 +811,7 @@
 			files = (
 				1447B70D262421CF00230A58 /* Preview Assets.xcassets in Resources */,
 				1447B70A262421CF00230A58 /* Assets.xcassets in Resources */,
-				984C21CB26B445C9006EEF4F /* GoogleService-Info.plist in Resources */,
+				9843BE5E29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */,
 				98A859BF288050440017D09A /* Localizable (en).strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -807,6 +822,7 @@
 			files = (
 				1F77A36926F249480044BE18 /* Preview Assets.xcassets in Resources */,
 				1F77A36626F249480044BE18 /* Assets.xcassets in Resources */,
+				9843BE5F29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */,
 				1F83DB76275AADA200D0148F /* GoogleService-Info.plist in Resources */,
 				98A859C0288050440017D09A /* Localizable (en).strings in Resources */,
 			);
@@ -818,6 +834,7 @@
 			files = (
 				86F39549210FA42600F209EC /* LaunchScreen.storyboard in Resources */,
 				86F39544210FA42500F209EC /* Main.storyboard in Resources */,
+				9843BE5D29E0CA6400733EE8 /* GoogleService-Info.plist in Resources */,
 				984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */,
 				14F15C94263954F2008DB04C /* GoogleService-Info.plist in Resources */,
 			);
@@ -828,6 +845,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				986A291F2997FD3700879BCF /* MainInterface.storyboard in Resources */,
+				9843BE6029E0CA6400733EE8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,17 +960,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */,
 				986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */,
 				98503DFD29D4C882003428AD /* ARCoreKey.swift in Sources */,
 				986A29282997FDE700879BCF /* Clew2AppController.swift in Sources */,
 				986A292C29B3AA1200879BCF /* AppController.swift in Sources */,
 				986A293029B3AD5200879BCF /* NavigateMapView.swift in Sources */,
+				9843BE6829E0CEAD00733EE8 /* ImageDisplay.mm in Sources */,
+				9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */,
+				9843BE6929E0CEB100733EE8 /* ImageConversion.mm in Sources */,
+				9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */,
+				9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */,
+				9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */,
+				9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */,
 				986A291C2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift in Sources */,
 				98C7D13329BBE22C000C46CA /* ARView.swift in Sources */,
+				9843BE6C29E0CEBB00733EE8 /* Utils.swift in Sources */,
 				986A29252997FD6200879BCF /* Clew2AppState.swift in Sources */,
 				986A293229B3AD6800879BCF /* RecordMapView.swift in Sources */,
+				9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */,
 				986A292A2997FE8800879BCF /* Clew2App.swift in Sources */,
+				9843BE6629E0CE9300733EE8 /* Map.swift in Sources */,
 				986A293629B3ADA400879BCF /* MapNavigator.swift in Sources */,
+				9843BE6B29E0CEB800733EE8 /* FirebaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

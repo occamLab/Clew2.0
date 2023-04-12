@@ -112,7 +112,7 @@ class MapRecorder: MapRecorderController, ObservableObject {
         planeDataList.sort{
             ($0["id"] as! Int) < ($1["id"] as! Int)
         }
-        
+        // TODO: need to add cloud anchor dictionary of anchor id:type and cloud anchor data, geospatial in json file
         let mapJsonFile: [String: Any] = ["map_id": mapId, "pose_data": poseData, "tag_data": tagData, "location_data": locationData, "plane_data": planeDataList]
         
         let folderPath = "rawMapData/" + String(describing: Auth.auth().currentUser!.uid)
