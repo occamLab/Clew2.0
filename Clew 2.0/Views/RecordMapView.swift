@@ -103,7 +103,7 @@ enum InstructionType: Equatable {
     
     func getStartTime() -> Double {
         switch self {
-        case .dropGeospatialAnchor(let startTime), .recordGeospatialAnchor(let startTime), .geospatialAnchorRecorded(let startTime) .dropCloudAnchor(let startTime), .recordPOICloudAnchor(let startTime), .POICloudAnchorRecorded(let startTime), .recorddoorCloudAnchor(let startTime), .doorCloudAnchorRecorded(let startTime), .recordstairCloudAnchor(let startTime), .stairCloudAnchorRecorded(let startTime), .findTag(let startTime), .saveTagLocation(let startTime), .tagFound(let startTime), .tagRecorded(startTime: let startTime), .findTagReminder(let startTime), .recordTagReminder(let startTime):
+        case .dropGeospatialAnchor(let startTime), .recordGeospatialAnchor(let startTime), .geospatialAnchorRecorded(let startTime), .dropCloudAnchor(let startTime), .recordPOICloudAnchor(let startTime), .POICloudAnchorRecorded(let startTime), .recorddoorCloudAnchor(let startTime), .doorCloudAnchorRecorded(let startTime), .recordstairCloudAnchor(let startTime), .stairCloudAnchorRecorded(let startTime), .findTag(let startTime), .saveTagLocation(let startTime), .tagFound(let startTime), .tagRecorded(startTime: let startTime), .findTagReminder(let startTime), .recordTagReminder(let startTime):
             return startTime
         default:
             return -1
@@ -116,67 +116,73 @@ enum InstructionType: Equatable {
         let previousInstruction = self
         switch self {
         // geospatial anchor cases
-        case .dropGeospatialAnchor {
+        case .dropGeospatialAnchor:
                 print("switch instructions from dropGeospatialAnchor to recordGeospatialAnchor after reaching outside of establishment and record geospatial button is pressed")
-                self = .recordGeospatialAnchor(startTime: DoubleNSDate().timeIntervalSince1970)
-            }
-        case .recordGeospatialAnchor {
-            if AppController.shared.mapRecorder.geospatialAnchorWasRecorded {
+                self = .recordGeospatialAnchor(startTime: NSDate().timeIntervalSince1970)
+            
+        case .recordGeospatialAnchor:
+            if Clew2AppController.shared.mapRecorder.geospatialAnchorWasRecorded {
                 print("switch instructions from recordGeospatialAnchor to geospatialAnchorRecorded after sufficent information has been recorded/timer is out to create geospatial anchor")
                 self = .geospatialAnchorRecorded(startTime: NSDate().timeIntervalSince1970)
             }
-        }
-        case .geospatialAnchorRecorded {
+        
+        case .geospatialAnchorRecorded:
                 print("switch instructions from recordGeospatialAnchor to dropCloudAnchor after geospatial anchor is recorded")
+            Clew2AppController.shared.mapRecorder.geospatialAnchorWasRecorded = false
                 self = .dropCloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
+            
         // drop cloud anchor cases
-        case .dropCloudAnchor && (cloudAnchorType == "POI") {
+        case .dropCloudAnchor:
+            if (Clew2AppController.shared.cloudAnchorType == "POI") {
                 print("switch instructions from dropCloudAnchor to recordPOICloudAnchor after finding a cloud anchor at a point of interest marked (i.e. a store POI in a market)")
                 self = .recordPOICloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
-        case .dropCloudAnchor && (cloudAnchorType == "door") {
+            } else if (Clew2AppController.shared.cloudAnchorType == "door") {
                 print("switch instructions from dropCloudAnchor to recorddoorCloudAnchor after finding cloud anchor at a door")
                 self = .recorddoorCloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
-        case .dropCloudAnchor && (cloudAnchorType == "stair") {
+            } else if (Clew2AppController.shared.cloudAnchorType == "stair") {
                 print("switch instructions from dropCloudAnchor to recordstairCloudAnchor after finding cloud anchor at stairs")
                 self = .recordstairCloudAnchor(startTime: NSDate().timeIntervalSince1970)
+            } else {
+                break
             }
+            
         //record cloud anchor cases
-        case .recordPOICloudAnchor {
-            if AppController.shared.mapRecorder.cloudAnchorWasRecorded {
+        case .recordPOICloudAnchor:
+            if Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded {
                 print("switch instructions from recordPOICloudAnchor to POICloudAnchorRecorded after recording cloud anchor at stairs")
                 self = .POICloudAnchorRecorded(startTime: NSDate().timeIntervalSince1970)
             }
-        }
-        case .recorddoorCloudAnchor {
-            if AppController.shared.mapRecorder.cloudAnchorWasRecorded {
+            
+        case .recorddoorCloudAnchor:
+            if Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded {
                 print("switch instructions from recorddoorCloudAnchor to doorCloudAnchorRecorded after recording cloud anchor at stairs")
                 self = .doorCloudAnchorRecorded(startTime: NSDate().timeIntervalSince1970)
             }
-        }
-        case .recordstairCloudAnchor {
-            if AppController.shared.mapRecorder.cloudAnchorWasRecorded {
+        
+        case .recordstairCloudAnchor:
+            if Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded {
                 print("switch instructions from recordstairCloudAnchor to stairCloudAnchorRecorded after recording cloud anchor at stairs")
                 self = .stairCloudAnchorRecorded(startTime: NSDate().timeIntervalSince1970)
             }
-        }
+        
         // cloud anchor recorded cases
-        case .POICloudAnchorRecorded {
+        case .POICloudAnchorRecorded:
                 print("switch instructions from POICloudAnchorRecorded to dropCloudAnchor after POI cloud anchor is recorded")
+            Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = false
                 self = .dropCloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
-        case .doorCloudAnchorRecorded {
+        
+        case .doorCloudAnchorRecorded:
                 print("switch instructions from doorCloudAnchorRecorded to dropCloudAnchor after door cloud anchor is recorded")
+            Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = false
                 self = .dropCloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
-        case .stairCloudAnchorRecorded {
+            
+        case .stairCloudAnchorRecorded:
                 print("switch instructions from stairCloudAnchorRecorded to dropCloudAnchor after stair cloud anchor is recorded")
+            Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = false
                 self = .dropCloudAnchor(startTime: NSDate().timeIntervalSince1970)
-            }
+            
         case .findTag:
-          //  if Clew2AppController.shared.mapRecorder.seesTag {
+          //  if Clew2Clew2AppController.shared.mapRecorder.seesTag {
             if tagFound {
                 self = .saveTagLocation(startTime: NSDate().timeIntervalSince1970)
             } else if locationRequested {
@@ -255,13 +261,13 @@ class RecordGlobalState: ObservableObject, RecordViewController {
         tagFound = false
         instructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
         nodeList = []
-        Clew2AppController.shared.recordViewer = self
+        Clew2Clew2AppController.shared.recordViewer = self
     }
     
     // Record view controller commands
     func updateInstructionText() {
         DispatchQueue.main.async {
-            if !Clew2AppController.shared.mapRecorder.firstTagFound {
+            if !Clew2Clew2AppController.shared.mapRecorder.firstTagFound {
                 self.tagFound = false
             } else {
                 self.tagFound = true
@@ -307,14 +313,14 @@ struct RecordMapView: View {
                         .animation(.easeInOut)
                 }
                 RecordTagButton(recordGlobalState: recordGlobalState)
-                    .environmentObject(Clew2AppController.shared.mapRecorder)
+                    .environmentObject(Clew2Clew2AppController.shared.mapRecorder)
                     .frame(maxHeight: .infinity, alignment: .bottom)
             }
             .padding()
         }
         .ignoresSafeArea(.keyboard)
         .onAppear {
-            Clew2AppController.shared.process(event: .StartRecordingRequested)
+            Clew2Clew2AppController.shared.process(event: .StartRecordingRequested)
         }
     }
 }

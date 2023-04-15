@@ -113,6 +113,7 @@
 		9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9BE972756BAE9001B5A2B /* ViewStructs.swift */; };
 		9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AB32864FECB009E808C /* MenuView.swift */; };
 		9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141497E52645A41700BF0ABC /* InstructionOverlay.swift */; };
+		9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843BE7229EB402200733EE8 /* Clew2DirectionFeedback.swift */; };
 		984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86F39545210FA42600F209EC /* Assets.xcassets */; };
 		984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */; };
 		984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21D126B44F4D006EEF4F /* FirebaseStorage */; };
@@ -234,6 +235,7 @@
 		98211CA1287258E60027860B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		98211CA428725A620027860B /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9843BE7229EB402200733EE8 /* Clew2DirectionFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew2DirectionFeedback.swift; sourceTree = "<group>"; };
 		98503DFC29D4C882003428AD /* ARCoreKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ARCoreKey.swift; path = "Clew 2.0/Credentials/ARCoreKey.swift"; sourceTree = SOURCE_ROOT; };
 		986A29172997FD3700879BCF /* Clew 2.0.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Clew 2.0.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		986A29182997FD3700879BCF /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
@@ -629,6 +631,7 @@
 			children = (
 				986A293329B3AD9800879BCF /* MapRecorder.swift */,
 				986A293529B3ADA400879BCF /* MapNavigator.swift */,
+				9843BE7229EB402200733EE8 /* Clew2DirectionFeedback.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -962,6 +965,7 @@
 			files = (
 				9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */,
 				986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */,
+				9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */,
 				98503DFD29D4C882003428AD /* ARCoreKey.swift in Sources */,
 				986A29282997FDE700879BCF /* Clew2AppController.swift in Sources */,
 				986A292C29B3AA1200879BCF /* AppController.swift in Sources */,

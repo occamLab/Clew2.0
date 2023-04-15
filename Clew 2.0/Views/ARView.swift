@@ -27,7 +27,7 @@ protocol ARViewController {
     func resetRecordingSession()
     func hostCloudAnchor(withTransform transform: simd_float4x4)
     func didHostCloudAnchor(cloudIndentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
-    func sessionDidRelocalize()
+  //  func sessionDidRelocalize()
 }
 
 //TODO: Check if this is needed
@@ -97,6 +97,8 @@ class ARView: UIViewController {
     // keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
     var sessionWasRelocalizing = false
     
+    /// list of cloud anchors that we hosted
+    var cloudAnchors: [NSString: ARAnchor] = [:]
     
     // CLOUD & GEOSPATIAL ANCHOR
     enum LocalizationState {
@@ -300,6 +302,13 @@ class ARView: UIViewController {
         }
         return nil
     }
+    
+    // lets us know that a cloud was created
+    func didHostCloudAnchor(cloudIdentifier: String, withTransform transform : simd_float4x4) {
+        //AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
+        cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+        Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
+      }
     
     /// creating a geospatial anchor
     func dropGeoSpatialAnchor(location: LocationInfoGeoSpatial)->GARAnchor? {
@@ -634,10 +643,10 @@ extension ARView: ARViewController {
     }
     
     /// Stops ping sound that plays during navigation
-        func stopPing() {
-            self.pingTimer.invalidate()
-            self.pingTimer = Timer()
-        }
+    func stopPing() {
+        self.pingTimer.invalidate()
+        self.pingTimer = Timer()
+    }
     
     
     /// Reset ARSession after a map recording has been exited
