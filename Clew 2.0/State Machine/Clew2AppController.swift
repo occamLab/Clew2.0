@@ -45,26 +45,31 @@ class Clew2AppController: AppController {
             switch commands {
                 // HomeScreen commands
             case .NameMap(let mapName):
+                break
             case .LoadFamilyScreen:
-                
+                break
                 // FamilyScreen commands
             case .LoadLocationScreen:
-                
+                break
                 // Location Screen commands
             case .LoadPOIScreen(mapName: String):
-                
+                break
                 // POIScreen commands
             case .LoadReviews(mapName: String):
+                break
             case .StartNavigation(mapName: String):
+                NavigateGlobalStateSingleton.shared = NavigateGlobalState()
             case .LoadPreviewDirections:
+                break
                 // ReviewsScreen commands TBD
                 // PreviewDirectionScreen commands TBD
                 //NameMapScreen commands TBD
             case .StartCreation(mapName: String):
+                break
                 
                 // CreateARView commands
-            case .LocateAndCategorizeMap: // user uses GPS to automatically categorize the map - map still needs to be named
-            case .LoadAndCategorizeMap(mapName: String): // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
+          //  case .LocateAndCategorizeMap: // user uses GPS to automatically categorize the map - map still needs to be named
+          //  case .LoadAndCategorizeMap(mapName: String): // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
                
             // MapRecorder and RecordMapView commands
             case .DropGeospatialAnchor:

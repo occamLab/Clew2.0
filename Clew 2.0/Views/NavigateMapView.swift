@@ -10,7 +10,7 @@ import SwiftUI
 import FirebaseAuth
 
 // Describes all the instructions that will exist on-screen for the user
-enum InstructionType: Equatable {
+enum NavigationInstructionType: Equatable {
     // April tag instruction cases
     case start(startTime: Double)  // initial instructions when navigate map screen is opened
     case tagFound(startTime: Double)  // pops up each time a tag is found during navigation
@@ -47,10 +47,10 @@ enum InstructionType: Equatable {
             switch self {
                 case .start: self = .start(startTime: NSDate().timeIntervalSince1970)
                 case .tagFound: self = .tagFound(startTime: NSDate().timeIntervalSince1970)
-            case .geospatialAnchorResolved: self = .geospatialAnchorResolved(startTime: NSDate().timeIntervalSince1970)
+                case .geospatialAnchorResolved: self = .geospatialAnchorResolved(startTime: NSDate().timeIntervalSince1970)
                 case .POICloudAnchorResolved: self = .POICloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
-                case .doorCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
-                case .stairCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
+            case .doorCloudAnchorResolved: self = .doorCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
+            case .stairCloudAnchorResolved: self = .stairCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
                 case .destinationReached: self = .destinationReached(startTime: NSDate().timeIntervalSince1970)
                 case .none: self = .none
             }
@@ -84,7 +84,7 @@ enum InstructionType: Equatable {
             // instead of the first tag, an anchor can be resolved to start navigation
             } else if didGeospatialAnchorResolved {
                 print("switch instructions from start to geospatialAnchor after finding geospatial anchor outside establishment")
-                self = .geospatialAnchorRecorded(startTime: DoubleNSDate().timeIntervalSince1970)
+                self = .geospatialAnchorResolved(startTime: NSDate().timeIntervalSince1970)
             } else if didCloudAnchorResolved && (cloudAnchorType == "POI") {
                 print("switch instructions from start to POICloudAnchorResolved after finding a cloud anchor at a point of interest marked (i.e. a store POI in a market)")
                 self = .POICloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
@@ -122,7 +122,6 @@ enum InstructionType: Equatable {
         case .destinationReached:
             print("case is destination reached")
             break
-        }
             
         case .none:
             print("case is none")
@@ -131,12 +130,12 @@ enum InstructionType: Equatable {
                 self = .tagFound(startTime: NSDate().timeIntervalSince1970)
             // update instructions when an anchor is resolved
             } else if didGeospatialAnchorResolved {
-                self = .geospatialAnchorRecorded(startTime: DoubleNSDate().timeIntervalSince1970)
-            } else if didCloudAnchorResolved && (cloudAnchorType == "POI") {
+                self = .geospatialAnchorResolved(startTime: NSDate().timeIntervalSince1970)
+            } else if didCloudAnchorResolved && (Clew2AppController.shared.cloudAnchorType == "POI") {
                 self = .POICloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
-            } else if didCloudAnchorResolved && (cloudAnchorType == "door") {
+            } else if didCloudAnchorResolved && (Clew2AppController.shared.cloudAnchorType == "door") {
                 self = .doorCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
-            } else if didCloudAnchorResolved && (cloudAnchorType == "stair") {
+            } else if didCloudAnchorResolved && (Clew2AppController.shared.cloudAnchorType == "stair") {
                 self = .stairCloudAnchorResolved(startTime: NSDate().timeIntervalSince1970)
             } else if endPointReached {
                 self = .destinationReached(startTime: NSDate().timeIntervalSince1970)
@@ -172,14 +171,14 @@ enum InstructionType: Equatable {
 
 
 // Provides persistent storage for on-screen instructions and state variables outside of the view struct
-class NavigateGlobalState: ObservableObject, NavigateViewController {
+    class NavigateGlobalState: ObservableObject, NavigateViewController {
     
     // for testing purposes
     @ObservedObject var navigation = Navigation()
-    @Published var binaryDirectionKey = NavigationBinaryDirection.none
-    @Published var binaryDirection: String = ""
-    @Published var clockDirectionKey = NavigationClockDirection.none
-    @Published var clockDirection: String = ""
+   // @Published var binaryDirectionKey = NavigationBinaryDirection.none
+   // @Published var binaryDirection: String = ""
+   // @Published var clockDirectionKey = NavigationClockDirection.none
+   // @Published var clockDirection: String = ""
     
     @Published var tagFound: Bool
     // TODO: resolve anchors in ARView and use the NavigateGlobalStateSingleton to set the variables to true
@@ -187,7 +186,7 @@ class NavigateGlobalState: ObservableObject, NavigateViewController {
     @Published var didCloudAnchorResolved: Bool
     @Published var endPointReached: Bool // set to true in ARView using the NavigateGlobalStateSingleton when current position is within endpointSphere
     
-    @Published var instructionWrapper: InstructionType
+    @Published var navigationInstructionWrapper: NavigationInstructionType
     
     init() {
         tagFound = false
@@ -195,7 +194,7 @@ class NavigateGlobalState: ObservableObject, NavigateViewController {
         didCloudAnchorResolved = false
         //cloudAnchorType = nil // TODO: update value if didCloudAnchorResolved is true using the label that map creators chose when dropping this cloud anchor (POI, door, stair)
         endPointReached = false
-        instructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
+        navigationInstructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
         Clew2AppController.shared.navigateViewer = self
     }
     
@@ -209,12 +208,12 @@ class NavigateGlobalState: ObservableObject, NavigateViewController {
                     print("first tag was found!")
                     self.tagFound = true
                 }
-                print("Instruction wrapper: \(self.instructionWrapper)")
+                print("Instruction wrapper: \(self.navigationInstructionWrapper)")
                 print("tagFound: \(self.tagFound)")
                 
-                self.instructionWrapper.transition(tagFound: self.tagFound, didGeospatialAnchorResolved: self.didGeospatialAnchorResolved, didCloudAnchorResolved: self.didCloudAnchorResolved, cloudAnchorType: Clew2AppController.shared.cloudAnchorType, endPointReached: self.endPointReached)
+                self.navigationInstructionWrapper.transition(tagFound: self.tagFound, didGeospatialAnchorResolved: self.didGeospatialAnchorResolved, didCloudAnchorResolved: self.didCloudAnchorResolved, cloudAnchorType: Clew2AppController.shared.cloudAnchorType, endPointReached: self.endPointReached)
                 
-                print("Instruction wrapper: \(self.instructionWrapper)")
+                print("Instruction wrapper: \(self.navigationInstructionWrapper)")
             }
         }
     }
@@ -254,8 +253,8 @@ struct NavigateMapView: View {
                 Text("Clock direction: \(navigateGlobalState.clockDirection)")
                 
                 // Show instructions if there are any
-                if navigateGlobalState.instructionWrapper.text != nil {
-                    InstructionOverlay(instruction: $navigateGlobalState.instructionWrapper.text)
+                if navigateGlobalState.navigationInstructionWrapper.text != nil {
+                    InstructionOverlay(instruction: $navigateGlobalState.navigationInstructionWrapper.text)
                         .animation(.easeInOut)
                 }
                 TagDetectionButton(navigateGlobalState: navigateGlobalState)
