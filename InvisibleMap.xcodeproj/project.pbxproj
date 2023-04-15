@@ -234,7 +234,7 @@
 		98211CA1287258E60027860B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		98211CA428725A620027860B /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		9843BE5C29E0CA6400733EE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		98503DFC29D4C882003428AD /* ARCoreKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCoreKey.swift; sourceTree = "<group>"; };
+		98503DFC29D4C882003428AD /* ARCoreKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ARCoreKey.swift; path = "Clew 2.0/Credentials/ARCoreKey.swift"; sourceTree = SOURCE_ROOT; };
 		986A29172997FD3700879BCF /* Clew 2.0.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Clew 2.0.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		986A29182997FD3700879BCF /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		986A291B2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
