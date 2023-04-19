@@ -288,6 +288,8 @@ class ARView: UIViewController {
        arView.session.pause()
     }
     
+    // TODO: another option: host cloud anchor with current camera pose or change this function to just take in the current camera pose
+    
     /// Creating cloud anchor using an existing local ARAnchor
     // TODO: MapRecorder can keep a dictionary of the cloud anchor id that's associated with its type (needs to get stored in firebase in json file)
     func hostCloudAnchor(withTransform transform: simd_float4x4)->(GARAnchor, ARAnchor)? {
