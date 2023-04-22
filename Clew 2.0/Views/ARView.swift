@@ -94,13 +94,11 @@ class ARView: UIViewController {
     
     var pathObjs: [SCNNode] = []
     
-    // keep track of whether or not the session was, at any point, in the relocalizing state.  The behavior of the ARCamera.TrackingState is a bit erratic in that the session will sometimes execute unexpected sequences (e.g., initializing -> normal -> not available -> initializing -> relocalizing).
-    var sessionWasRelocalizing = false
     
+    // CLOUD & GEOSPATIAL ANCHOR
     /// list of cloud anchors that we hosted
     var cloudAnchors: [NSString: ARAnchor] = [:]
     
-    // CLOUD & GEOSPATIAL ANCHOR
     enum LocalizationState {
         case none
         case withCloudAnchors
