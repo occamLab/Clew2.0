@@ -46,35 +46,36 @@ indirect enum Clew2AppState: StateType {
         case StartCreationRequested // pressing Continue button after enteirng map naming and categorizing info
         
         // ReviewsScreen events TBD
+        
         // PreviewDirectionScreen events TBD
         
         // CreateARView events
-        case DropGeospatialAnchorRequested
+        case DropGeospatialAnchorRequested // anchors outside the establishment
         case DropPOIAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform) // POI cloud anchors
+        // TODO: cloud anchors are both breadcrumbs and can be named as POIs - need to figure out the time interval at which it should be dropped or if we should make users drop it frequently and name those that they want to
         case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
-        case LeaveCreateARViewRequested
+        case LeaveCreateARViewRequested(mapName: String)
         
-        // NavigateARView events
-        case StartNavigationRequested(mapName: String) // pressing a POI button in the Location Screen
-        case LeaveNavigateMapRequested(mapName: String) // takes users to POIScreen state
-        case ChangeRouteRequested(mapName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
-        case PlanPath
-        // resolving anchors
-        case ResolvedCloudAnchor
-        case EndpointReached(finalEndpoint: Bool)
-        case RateMapRequested(mapName: String)
-        case HomeScreenRequested
-        
-        // events common to both CreateARView and NavigateARView
+        // Frame handling events
         case NewARFrame(cameraFrame: ARFrame) // to update AR screen during map creation
         case NewTagFound(tag: AprilTags, cameraTransform: simd_float4x4, snapTagsToVertical: Bool) // if we are still using April tags
         case PlanesUpdated(planes: [ARPlaneAnchor])
         
-        
+        // NavigateARView events
+        case StartNavigationRequested(mapName: String) // pressing a POI button in the Location Screen
+        case LeaveNavigateARViewRequested(mapName: String) // takes users to POIScreen state
+        case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
+        case PlanPath
+        // resolving anchors
+        case ResolvedCloudAnchor
+        case EndpointReached(mapName: String, finalEndpoint: Bool)
+        case RateMapRequested(mapName: String)
+        case HomeScreenRequested
+        case POIScreenRequested(mapName: String)
     }
     
     // All the effectful outputs which the state desires to have performed on the app
@@ -96,13 +97,9 @@ indirect enum Clew2AppState: StateType {
         
         // ReviewsScreen commands TBD
         // PreviewDirectionScreen commands TBD
-        
         //NameMapScreen commands TBD
-        case StartCreation(mapName: String)
         
         // CreateARView commands
-        //case LocateAndCategorizeMap // user uses GPS to automatically categorize the map - map still needs to be named
-        //case LoadAndCategorizeMap(mapName: String) // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
         case DropGeospatialAnchor
         case DropPOIAnchor
         case DropDoorAnchor
@@ -111,20 +108,19 @@ indirect enum Clew2AppState: StateType {
         case NamePOI
         case SaveMapToFirebase(mapName: String)
         case LeaveCreateARView(mapName: String)
+        //case LocateAndCategorizeMap // user uses GPS to automatically categorize the map - map still needs to be named
+        //case LoadAndCategorizeMap(mapName: String) // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
+
         
         // NavigateARView commands
-        // resolving anchors
         case ResolvedCloudAnchor
-        
         case PlanPath
         case UpdateInstructionText
         case UpdatePoseVIO(cameraFrame: ARFrame)
         case UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4)
-        
         case ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
         case LoadEndPopUp(mapName: String)
         case LoadRatePopUp(mapName: String)
-        
         case LeaveNavigateARView(mapName: String)
     }
     
@@ -135,7 +131,7 @@ indirect enum Clew2AppState: StateType {
         case (.HomeScreen, .CreateMapRequested(let mapName)):
             self = .NameMapScreen
             return [.NameMap(mapName: mapName)] // should we send to Firebase after user presses 'Finished'?
-        case (.NameMapScreen, .StartCreationRequested()):
+        case (.NameMapScreen, .StartCreationRequested):
             self = .CreateARView(.CreateARView)
             return []
             
@@ -173,6 +169,12 @@ indirect enum Clew2AppState: StateType {
             let commands = newState.handle(event: CreateARViewState.Event(event)!)
             self = .CreateARView(newState)
             return commands
+        case (.CreateARView, .SaveMapRequested(let mapName)):
+            self = .POIScreen
+            return [.SaveMapToFirebase(mapName: mapName)]
+        case (.CreateARView, .LeaveCreateARViewRequested(let mapName)):
+            self = .POIScreen
+            return [.LeaveCreateARView(mapName: mapName)]
             
         // handling lower level events for NavigateMapState
         case (.NavigateARView(let state), _) where NavigateARViewState.Event(event) != nil:
@@ -180,6 +182,12 @@ indirect enum Clew2AppState: StateType {
             let commands = newState.handle(event: NavigateARViewState.Event(event)!)
             self = .NavigateARView(newState)
             return commands
+        case (.NavigateARView, .HomeScreenRequested):
+            self = .HomeScreen
+            return []
+        case (.NavigateARView, .POIScreenRequested(let mapName)):
+            self = .POIScreen
+            return [.LoadPOIScreen(mapName: mapName)]
             
             default: break
         }
@@ -198,12 +206,13 @@ enum CreateARViewState: StateType {
     
     // All the effectual inputs from the app which CreateMapState can react to
     enum Event {
-        case DropGeospatialAnchorRequested // anchors outside the establishment
-        case DropPOIAnchorRequested // cloud anchors are both breadcrumbs and can be named as POIs - need to figure out the time interval at which it should be dropped or if we should make users drop it frequently and name those that they want to
-        case DropDoorAnchorRequested
-        case DropStairAnchorRequested
+        case DropGeospatialAnchorRequested
+        case DropPOIAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
+        case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
+        case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case ViewPOIsRequested
         case NamePOIRequested
+        // events handled in higher level (to switch to higher level states)
         case SaveMapRequested(mapName: String)
         case LeaveCreateARViewRequested(mapName: String)
         
@@ -231,12 +240,6 @@ enum CreateARViewState: StateType {
         case (.CreateARView, .DropStairAnchorRequested):
             self = .DropStairAnchorState
             return [.DropStairAnchor]
-        case (.CreateARView, .SaveMapRequested(let mapName)):
-            self = .POIScreen
-            return [.SaveMapToFirebase(mapName: mapName)]
-        case (.CreateARView, .LeaveCreateARViewRequested(let mapName)):
-            self = .POIScreen
-            return [.LeaveCreateARView(mapName: mapName)]
         case (.CreateARView, .ViewPOIsRequested):
             self = .CreateARView
             return [.ViewPOIs]
@@ -246,11 +249,30 @@ enum CreateARViewState: StateType {
     }
 }
 
+
 // Translate between events in Clew2AppState and events in CreateMapState
 extension CreateARViewState.Event {
     init?(_ event: Clew2AppState.Event) {
+        // Translate between events in CreatorAppState and events in RecordMapState
         switch event {
-            
+        case .DropGeospatialAnchorRequested:
+            self = .DropGeospatialAnchorRequested
+        case .DropPOIAnchorRequested(let cloudIdentifier, let withTransform):
+            self = .DropPOIAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: withTransform)
+        case .DropDoorAnchorRequested(let cloudIdentifier, let withTransform):
+            self = .DropDoorAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: withTransform)
+        case .DropStairAnchorRequested(let cloudIdentifier, let withTransform):
+            self = .DropStairAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: withTransform)
+        case .ViewPOIsRequested:
+            self = .ViewPOIsRequested
+        case .NamePOIRequested:
+            self = .NamePOIRequested
+        case .NewARFrame(let cameraFrame):
+            self = .NewARFrame(cameraFrame: cameraFrame)
+        case .NewTagFound(let tag, let cameraTransform, let snapTagsToVertical):
+            self = .NewTagFound(tag: tag, cameraTransform: cameraTransform, snapTagsToVertical: snapTagsToVertical)
+        case .PlanesUpdated(let planes):
+            self = .PlanesUpdated(planes: planes)
         default: return nil
         }
     }
@@ -268,17 +290,16 @@ enum NavigateARViewState: StateType {
         case LeaveNavigateARViewRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
-        
-        case EndpointReached (mapName: String) // POI cloud anchor resolved
+        case EndpointReached(mapName: String, finalEndpoint: Bool) // POI cloud anchor resolved
+        case RateMapRequested(mapName: String)
+        // events handled in higher level (to change to higher level state)
         case HomeScreenRequested
         case POIScreenRequested(mapName: String)
-        case RateMapRequested(mapName: String)
         
-        // frame handling events
+        // Frame handling events
         case NewARFrame(cameraFrame: ARFrame) // to update AR screen during map creation
         case NewTagFound(tag: AprilTags, cameraTransform: simd_float4x4, snapTagsToVertical: Bool) // if we are still using April tags
         case PlanesUpdated(planes: [ARPlaneAnchor])
-        
     }
     
     // Refers to commands defined in Clew2AppState - adds onto created commands for NavigateMapState
@@ -295,15 +316,9 @@ enum NavigateARViewState: StateType {
             return [.ModifyRoute(mapname: mapName, POIName: POIName)]
         case (.NavigateARView, .PlanPath):
             return [.PlanPath]
-        case (.NavigateARView, .EndpointReached(let mapName)):
+        case (.NavigateARView, .EndpointReached(let mapName, let finalEndpoint)):
             self = .NavigateARView
             return [.LoadEndPopUp(mapName: mapName)]
-//        case (.NavigateARView, .HomeScreenRequested):
-//            self = .HomeScreen
-//            return []
-        case (.NavigateARView, .POIScreenRequested(let mapName)):
-            self = .POIScreen
-            return [.LoadPOIScreen(mapName: mapName)]
         case (.NavigateARView, .RateMapRequested(let mapName)):
             self = .NavigateARView
             return [.LoadRatePopUp(mapName: mapName)]
@@ -320,30 +335,22 @@ enum NavigateARViewState: StateType {
 extension NavigateARViewState.Event {
     init?(_ event: Clew2AppState.Event) {
         switch event {
-        case .HomeScreenRequested: // lower level
-            self = .HomeScreenRequested // switch to higher level event
-        
-        default: return nil
-        }
-    }
-}
-
-extension RecordMapState.Event {
-    init?(_ event: CreatorAppState.Event) {
-        // Translate between events in CreatorAppState and events in RecordMapState
-        switch event {
+        case .LeaveNavigateARViewRequested(let mapName): // lower level event
+            self = .LeaveNavigateARViewRequested(mapName: mapName) // switch to higher level event
+        case .ChangeRouteRequested(let mapName, let POIName):
+            self = .ChangeRouteRequested(mapName: mapName, POIName: POIName)
+        case .PlanPath:
+            self = .PlanPath
+        case .EndpointReached(let mapName, let finalEndpoint):
+            self = .EndpointReached(mapName: mapName, finalEndpoint: finalEndpoint)
+        case .RateMapRequested(let mapName):
+            self = .RateMapRequested(mapName: mapName)
         case .NewARFrame(let cameraFrame):
             self = .NewARFrame(cameraFrame: cameraFrame)
         case .NewTagFound(let tag, let cameraTransform, let snapTagsToVertical):
             self = .NewTagFound(tag: tag, cameraTransform: cameraTransform, snapTagsToVertical: snapTagsToVertical)
         case .PlanesUpdated(let planes):
             self = .PlanesUpdated(planes: planes)
-        case .SaveLocationRequested(let locationName):
-            self = .SaveLocationRequested(locationName: locationName)
-        case .ViewLocationsRequested:
-            self = .ViewLocationsRequested
-        case .DismissLocationsRequested:
-            self = .DismissLocationsRequested
         default: return nil
         }
     }

@@ -57,16 +57,16 @@ enum InstructionType: Equatable {
                 
             // POI cloud anchor instructions
             case .dropCloudAnchor: return "Walk around until you find a point of interest you would like to record."
-            case .recordPOICloudAnchor return "Walk in a half circle around desired point of interest, keeping phone steady at eye-level to record cloud anchor."
-            case .POICloudAnchorRecorded return "Cloud anchor was recorded."
+            case .recordPOICloudAnchor: return "Walk in a half circle around desired point of interest, keeping phone steady at eye-level to record cloud anchor."
+            case .POICloudAnchorRecorded: return "Cloud anchor was recorded."
                 
             // door cloud anchor instructions
-            case .recorddoorCloudAnchor return "Walk in a half circle around desired door/entrance, keeping phone steady to record cloud anchor."
-            case .doorCloudAnchorRecorded return "Cloud anchor was recorded."
+            case .recorddoorCloudAnchor: return "Walk in a half circle around desired door/entrance, keeping phone steady to record cloud anchor."
+            case .doorCloudAnchorRecorded: return "Cloud anchor was recorded."
             
             // stair cloud anchor instructions
-            case .recordstairCloudAnchor return "Walk in a large half circle around stairs capturing sides of stairs and keeping phone steady to record cloud anchor."
-            case .stairCloudAnchorRecorded return "Cloud anchor was recorded."
+            case .recordstairCloudAnchor: return "Walk in a large half circle around stairs capturing sides of stairs and keeping phone steady to record cloud anchor."
+            case .stairCloudAnchorRecorded: return "Cloud anchor was recorded."
                 
             // tag instructions
             case .findTag: return "Pan camera to find a tag."  // displayed as initial instructions
@@ -261,13 +261,13 @@ class RecordGlobalState: ObservableObject, RecordViewController {
         tagFound = false
         instructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
         nodeList = []
-        Clew2Clew2AppController.shared.recordViewer = self
+        Clew2AppController.shared.recordViewer = self
     }
     
     // Record view controller commands
-    func updateInstructionText() {
+    func updateRecordInstructionText() {
         DispatchQueue.main.async {
-            if !Clew2Clew2AppController.shared.mapRecorder.firstTagFound {
+            if !Clew2AppController.shared.mapRecorder.firstTagFound {
                 self.tagFound = false
             } else {
                 self.tagFound = true
@@ -320,7 +320,7 @@ struct RecordMapView: View {
         }
         .ignoresSafeArea(.keyboard)
         .onAppear {
-            Clew2Clew2AppController.shared.process(event: .StartRecordingRequested)
+            Clew2AppController.shared.process(event: .StartRecordingRequested)
         }
     }
 }

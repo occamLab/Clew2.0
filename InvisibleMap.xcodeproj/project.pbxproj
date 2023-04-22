@@ -116,6 +116,17 @@
 		9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843BE7229EB402200733EE8 /* Clew2DirectionFeedback.swift */; };
 		9843BE7529F4866800733EE8 /* AprilTagTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822FA78524E2FB3E0001F463 /* AprilTagTracker.swift */; };
 		9843BE7629F486A100733EE8 /* StateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7562624230200230A58 /* StateType.swift */; };
+		9843BE7729F4A36100733EE8 /* MapNavigateExitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AC2286CB6AC009E808C /* MapNavigateExitButton.swift */; };
+		9843BE7829F4A36400733EE8 /* TagDetectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE46D7F27644F93001A3812 /* TagDetectionButton.swift */; };
+		9843BE7929F4A36600733EE8 /* GetDirectionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859CA2889C7530017D09A /* GetDirectionsButton.swift */; };
+		9843BE7A29F4A64E00733EE8 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
+		9843BE7B29F4A65000733EE8 /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
+		9843BE7C29F4A68B00733EE8 /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859C12886FBED0017D09A /* UserAccountView.swift */; };
+		9843BE7D29F4A69500733EE8 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211C9D28724C5A0027860B /* HelpView.swift */; };
+		9843BE7E29F4A69700733EE8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA1287258E60027860B /* SettingsView.swift */; };
+		9843BE7F29F4A69900733EE8 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA428725A620027860B /* FeedbackView.swift */; };
+		9843BE8029F4A6AC00733EE8 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9717726FB89DB00DEB00A /* AppController.swift */; };
+		9843BE8129F4A6B800733EE8 /* Localizable (en).strings in Resources */ = {isa = PBXBuildFile; fileRef = 98A859BE288050440017D09A /* Localizable (en).strings */; };
 		984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86F39545210FA42600F209EC /* Assets.xcassets */; };
 		984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */; };
 		984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21D126B44F4D006EEF4F /* FirebaseStorage */; };
@@ -852,6 +863,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9843BE8129F4A6B800733EE8 /* Localizable (en).strings in Resources */,
 				986A291F2997FD3700879BCF /* MainInterface.storyboard in Resources */,
 				9843BE6029E0CA6400733EE8 /* GoogleService-Info.plist in Resources */,
 			);
@@ -968,6 +980,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9843BE7E29F4A69700733EE8 /* SettingsView.swift in Sources */,
+				9843BE7C29F4A68B00733EE8 /* UserAccountView.swift in Sources */,
 				9843BE7529F4866800733EE8 /* AprilTagTracker.swift in Sources */,
 				9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */,
 				986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */,
@@ -982,16 +996,24 @@
 				9843BE6929E0CEB100733EE8 /* ImageConversion.mm in Sources */,
 				9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */,
 				9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */,
+				9843BE7829F4A36400733EE8 /* TagDetectionButton.swift in Sources */,
 				9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */,
 				98B2357929EB48CD00BA2853 /* Clew2PathFinder.swift in Sources */,
 				9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */,
+				9843BE7729F4A36100733EE8 /* MapNavigateExitButton.swift in Sources */,
 				986A291C2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift in Sources */,
 				98C7D13329BBE22C000C46CA /* ARView.swift in Sources */,
+				9843BE7B29F4A65000733EE8 /* AuthenticationHelper.swift in Sources */,
+				9843BE7D29F4A69500733EE8 /* HelpView.swift in Sources */,
 				9843BE6C29E0CEBB00733EE8 /* Utils.swift in Sources */,
 				986A29252997FD6200879BCF /* Clew2AppState.swift in Sources */,
 				986A293229B3AD6800879BCF /* RecordMapView.swift in Sources */,
+				9843BE7929F4A36600733EE8 /* GetDirectionsButton.swift in Sources */,
+				9843BE7F29F4A69900733EE8 /* FeedbackView.swift in Sources */,
 				9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */,
 				986A292A2997FE8800879BCF /* Clew2App.swift in Sources */,
+				9843BE8029F4A6AC00733EE8 /* AppController.swift in Sources */,
+				9843BE7A29F4A64E00733EE8 /* AppleSignInController.swift in Sources */,
 				9843BE6629E0CE9300733EE8 /* Map.swift in Sources */,
 				986A293629B3ADA400879BCF /* MapNavigator.swift in Sources */,
 				9843BE6B29E0CEB800733EE8 /* FirebaseManager.swift in Sources */,
