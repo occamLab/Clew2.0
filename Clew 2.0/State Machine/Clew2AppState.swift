@@ -8,9 +8,6 @@
 
 import Foundation
 import ARKit //change
-import ARCore
-import ARCoreGeospatial
-import ARCoreCloudAnchors
 
 indirect enum Clew2AppState: StateType {
     // Higher level app states
@@ -30,7 +27,7 @@ indirect enum Clew2AppState: StateType {
     // All the effectual inputs from the app which the state can react to
     enum Event {
         // HomeScreen events
-        case CreateMapRequested(mapName: String)
+        case CreateMapRequested
         case LocateUserRequested
         case DomainSelected // top of name hierarchy (i.e. Food & Drinks)
         
@@ -116,6 +113,8 @@ indirect enum Clew2AppState: StateType {
         case LeaveMap(mapName: String)
         
         // NavigateARView commands
+        case LeaveMap(mapName: String)
+        
         // resolving anchors
         case ResolvedCloudAnchor
         
@@ -133,12 +132,12 @@ indirect enum Clew2AppState: StateType {
     mutating func handle(event: Event) -> [Command] {
         print("Last State: \(self), \(event)")
         switch (self, event) {
-        case (.HomeScreen, .CreateMapRequested(let mapName)):
+        case (.HomeScreen, .CreateMapRequested):
             self = .NameMapScreen
-            return [.NameMap(mapName: mapName)] // should we send to Firebase after user presses 'Finished'?
+            return [.NameMap] // should we send to Firebase after user presses 'Finished'?
         case (.NameMapScreen, .StartCreationRequested(let mapName)):
             self = .CreateARView
-            return [.StartCreation(mapName: mapName)]
+            return [.StartCreation]
             
             
         // user finds a map's POIs without shortcut/searchbar - i.e. selects a domain -> ... -> POI
@@ -175,7 +174,7 @@ indirect enum Clew2AppState: StateType {
         // handling lower level events for NavigateMapState
         case (.NavigateARView(let state), _) where NavigateARViewState.Event(event) != nil:
             var newState = state
-            let commands = newState.handle(event: NavigateARViewState.Event(event)!)
+            let commands = newState.handle(event: NavigateArViewState.Event(event)!)
             self = .NavigateARView(newState)
             return commands
             
@@ -190,9 +189,6 @@ enum CreateARViewState: StateType {
     case CreateARView
     case DropDoorAnchorState
     case DropStairAnchorState
-    case POIScreen
-    case HomeScreen
-    // TODO: states need to be independent for each enum level (Create and Navigate should not share the same state)
     
     // Initial state upon transitioning into the CreateMapState
     static let initialState = CreateARViewState.CreateARView
@@ -235,10 +231,10 @@ enum CreateARViewState: StateType {
         case (.CreateARView, .ViewPOIsRequested):
             self = .CreateARView
             return [.ViewPOIs]
-        case (.CreateARView, .SaveMapRequested(let mapName)):
+        case (.CreateARView, .SaveMapRequested(let mapName))
             self = .POIScreen
             return [.SaveMapToFirebase(mapName: mapName)]
-        case (.CreateARView, .LeaveMapRequested(let mapName)):
+        case (.CreateARView, .LeaveMapRequested(let mapName))
             self = .POIScreen
             return [.LeaveMap(mapName: mapName)]
         default: break
@@ -288,25 +284,24 @@ enum NavigateARViewState: StateType {
     // In response to an event, CreateMapState may emit a command
     mutating func handle(event:Event) -> [Command] {
         switch (self, event) {
-        case (.NavigateARView, .LeaveMapRequested(let mapName)):
+        case (.NavigateARView, .LeaveMapRequested(let mapName))
             self = .NavigateARView
-            return [.LeaveMap(mapName: mapName)]
-        case (.NavigateARView, .ChangeRouteRequested(let mapName, let POIName)):
+            return [.LeaveMap(mapFileName: mapName)]
+        case (.NavigateARView, .ChangeRouteRequested(let mapName, let POIName))
             self = .NavigateARView
             return [.ModifyRoute(mapname: mapName, POIName: POIName)]
         case (.NavigateARView, .PlanPath):
             return [.PlanPath]
-        case (.NavigateARView, .EndpointReached(let mapName)):
+        case (.NavigateARView, .EndpointReached(let mapName))
             self = .NavigateARView
             return [.LoadEndPopUp(mapName: mapName)]
-        // TODO: need to be at top level that doesn't care about current state, just event and switches to homescreen state
-        case (.NavigateARView, .HomeScreenRequested):
+        case (.NavigateARView, .HomeScreenRequested)
             self = .HomeScreen
             return []
-        case (.NavigateARView, .POIScreenRequested(let mapName)):
+        case (.NavigateARView, .POIScreenRequested(let mapName))
             self = .POIScreen
-            return [.LoadPOIScreen(mapName: mapName)]
-        case (.NavigateARView, .RateMapRequested(let mapName)):
+            return [.LoadPOIScreen(mapFileName: mapName)]
+        case (.NavigateARView, .RateMapRequested(let mapName))
             self = .NavigateARView
             return [.LoadRatePopUp(mapName: mapName)]
         case (.NavigateARView, .NewARFrame(let cameraFrame)):
