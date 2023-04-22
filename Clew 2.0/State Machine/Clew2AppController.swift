@@ -97,6 +97,7 @@ class Clew2AppController: AppController {
                 
             case .NamePOI: //TODO: after dropping POI during creation, name the POI, store it in some dictionary? put into Firebase?
                 // ask: how to save this in Firebase
+                break
                 
             case .SaveMapToFirebase(mapName: String):
                 Clew2AppController.shared.mapRecorder.sendToFirebase(mapName: mapName)
@@ -114,6 +115,7 @@ class Clew2AppController: AppController {
             case .ResolvedCloudAnchor:
                 // ask: arview session that resolves cloud anchors - how do we call this?
                 // the session will mark the anchorType var in the session
+                break
      
             case .PlanPath:
                 if let cameraNode = arViewer?.cameraNode {
@@ -129,12 +131,17 @@ class Clew2AppController: AppController {
                 navigateViewer?.updateInstructionText()
                 print("updated instruction text")
                 
-            case .UpdatePoseVIO(cameraFrame: ARFrame)
-            case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4)
+            case .UpdatePoseVIO(cameraFrame: ARFrame):
+                break
+            case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4):
+                break
             
-            case .ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
-            case .LoadEndPopUp(mapName: String)
-            case .LoadRatePopUp(mapName: String)
+            case .ModifyRoute(mapname: String, POIName: String): // call StartNavigation to a new POI endpoint
+                break
+            case .LoadEndPopUp(mapName: String):
+                break
+            case .LoadRatePopUp(mapName: String):
+                break
             }
         }
     }

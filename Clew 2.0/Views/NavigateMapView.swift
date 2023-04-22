@@ -167,6 +167,7 @@ enum NavigationInstructionType: Equatable {
         }
     }
 }
+}
 
 
 
@@ -218,6 +219,7 @@ enum NavigationInstructionType: Equatable {
         }
     }
 }
+
 
 class NavigateGlobalStateSingleton {
     public static var shared = NavigateGlobalState()

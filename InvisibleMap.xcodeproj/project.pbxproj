@@ -142,6 +142,7 @@
 		98A859C22886FBED0017D09A /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859C12886FBED0017D09A /* UserAccountView.swift */; };
 		98A859C32886FBED0017D09A /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859C12886FBED0017D09A /* UserAccountView.swift */; };
 		98A859CB2889C7530017D09A /* GetDirectionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859CA2889C7530017D09A /* GetDirectionsButton.swift */; };
+		98B2357929EB48CD00BA2853 /* Clew2PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */; };
 		98BF26A026AF4F9E0076427E /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
 		98BF26A126AF4F9E0076427E /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
 		98BF26A526B03EAA0076427E /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
@@ -255,6 +256,7 @@
 		98A859BE288050440017D09A /* Localizable (en).strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Localizable (en).strings"; sourceTree = "<group>"; };
 		98A859C12886FBED0017D09A /* UserAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountView.swift; sourceTree = "<group>"; };
 		98A859CA2889C7530017D09A /* GetDirectionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDirectionsButton.swift; sourceTree = "<group>"; };
+		98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew2PathFinder.swift; sourceTree = "<group>"; };
 		98BF269526AF01F60076427E /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
 		98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
 		98BF269926AF14D50076427E /* InvisibleMap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InvisibleMap.entitlements; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 				986A29202997FD3700879BCF /* Info.plist */,
 				986A29292997FE8800879BCF /* Clew2App.swift */,
 				986A292B29B3AA1200879BCF /* AppController.swift */,
+				98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */,
 			);
 			path = "Clew 2.0";
 			sourceTree = "<group>";
@@ -976,6 +979,7 @@
 				9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */,
 				9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */,
 				9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */,
+				98B2357929EB48CD00BA2853 /* Clew2PathFinder.swift in Sources */,
 				9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */,
 				986A291C2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift in Sources */,
 				98C7D13329BBE22C000C46CA /* ARView.swift in Sources */,

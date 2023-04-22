@@ -174,7 +174,7 @@ indirect enum Clew2AppState: StateType {
         // handling lower level events for NavigateMapState
         case (.NavigateARView(let state), _) where NavigateARViewState.Event(event) != nil:
             var newState = state
-            let commands = newState.handle(event: NavigateArViewState.Event(event)!)
+            let commands = newState.handle(event: NavigateARViewState.Event(event)!)
             self = .NavigateARView(newState)
             return commands
             
