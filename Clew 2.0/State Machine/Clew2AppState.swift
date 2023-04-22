@@ -27,7 +27,7 @@ indirect enum Clew2AppState: StateType {
     // All the effectual inputs from the app which the state can react to
     enum Event {
         // HomeScreen events
-        case CreateMapRequested
+        case CreateMapRequested(mapName: String)
         case LocateUserRequested
         case DomainSelected // top of name hierarchy (i.e. Food & Drinks)
         
@@ -43,7 +43,7 @@ indirect enum Clew2AppState: StateType {
         case PreviewDirectionSelected(mapName: String) //user wants to see map of all routes in that location (map of Cheesecake Factory)
         
         // NameMapScreen events
-        case StartCreationRequested(mapName: String) // pressing Continue button after enteirng map naming and categorizing info
+        case StartCreationRequested // pressing Continue button after enteirng map naming and categorizing info
         
         // ReviewsScreen events TBD
         // PreviewDirectionScreen events TBD
@@ -56,10 +56,11 @@ indirect enum Clew2AppState: StateType {
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
-        case LeaveMapRequested
+        case LeaveCreateARViewRequested
         
         // NavigateARView events
-        case LeaveMapRequested(mapName: String) // takes users to POIScreen state
+        case StartNavigationRequested(mapName: String) // pressing a POI button in the Location Screen
+        case LeaveNavigateMapRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
         // resolving anchors
@@ -91,7 +92,7 @@ indirect enum Clew2AppState: StateType {
         // POIScreen commands
         case LoadReviews(mapName: String)
         case StartNavigation(mapName: String)
-        case LoadPreviewDirections
+        case LoadPreviewDirections(mapName: String)
         
         // ReviewsScreen commands TBD
         // PreviewDirectionScreen commands TBD
@@ -101,7 +102,6 @@ indirect enum Clew2AppState: StateType {
         
         // CreateARView commands
         //case LocateAndCategorizeMap // user uses GPS to automatically categorize the map - map still needs to be named
-
         //case LoadAndCategorizeMap(mapName: String) // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
         case DropGeospatialAnchor
         case DropPOIAnchor
@@ -110,11 +110,9 @@ indirect enum Clew2AppState: StateType {
         case ViewPOIs
         case NamePOI
         case SaveMapToFirebase(mapName: String)
-        case LeaveMap(mapName: String)
+        case LeaveCreateARView(mapName: String)
         
         // NavigateARView commands
-        case LeaveMap(mapName: String)
-        
         // resolving anchors
         case ResolvedCloudAnchor
         
@@ -126,19 +124,24 @@ indirect enum Clew2AppState: StateType {
         case ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
         case LoadEndPopUp(mapName: String)
         case LoadRatePopUp(mapName: String)
+        
+        case LeaveNavigateARView(mapName: String)
     }
     
     // In response to an event, a state may transition to a new state, and it may emit a command
     mutating func handle(event: Event) -> [Command] {
         print("Last State: \(self), \(event)")
         switch (self, event) {
-        case (.HomeScreen, .CreateMapRequested):
+        case (.HomeScreen, .CreateMapRequested(let mapName)):
             self = .NameMapScreen
-            return [.NameMap] // should we send to Firebase after user presses 'Finished'?
-        case (.NameMapScreen, .StartCreationRequested(let mapName)):
-            self = .CreateARView
-            return [.StartCreation]
+            return [.NameMap(mapName: mapName)] // should we send to Firebase after user presses 'Finished'?
+        case (.NameMapScreen, .StartCreationRequested()):
+            self = .CreateARView(.CreateARView)
+            return []
             
+        case (.POIScreen, .StartNavigationRequested(let mapName)):
+            self = .NavigateARView(.NavigateARView)
+            return []
             
         // user finds a map's POIs without shortcut/searchbar - i.e. selects a domain -> ... -> POI
         case (.HomeScreen, .DomainSelected):
@@ -158,7 +161,7 @@ indirect enum Clew2AppState: StateType {
             return [.StartNavigation(mapName: mapName)]
         case (.POIScreen, .PreviewDirectionSelected(let mapName)):
             self = .PreviewDirectionsScreen
-            return [.LoadPreviewDirections]
+            return [.LoadPreviewDirections(mapName: mapName)]
         // user finds a map's POIs through the search bar - takes shortcut
 //        case (.HomeScreen, .LocationSelected(let mapName)):
 //            self = .POIScreen
@@ -174,7 +177,7 @@ indirect enum Clew2AppState: StateType {
         // handling lower level events for NavigateMapState
         case (.NavigateARView(let state), _) where NavigateARViewState.Event(event) != nil:
             var newState = state
-            let commands = newState.handle(event: NavigateArViewState.Event(event)!)
+            let commands = newState.handle(event: NavigateARViewState.Event(event)!)
             self = .NavigateARView(newState)
             return commands
             
@@ -202,7 +205,7 @@ enum CreateARViewState: StateType {
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
-        case LeaveMapRequested(mapName: String)
+        case LeaveCreateARViewRequested(mapName: String)
         
         // frame handling events
         case NewARFrame(cameraFrame: ARFrame) // to update AR screen during map creation
@@ -228,15 +231,15 @@ enum CreateARViewState: StateType {
         case (.CreateARView, .DropStairAnchorRequested):
             self = .DropStairAnchorState
             return [.DropStairAnchor]
+        case (.CreateARView, .SaveMapRequested(let mapName)):
+            self = .POIScreen
+            return [.SaveMapToFirebase(mapName: mapName)]
+        case (.CreateARView, .LeaveCreateARViewRequested(let mapName)):
+            self = .POIScreen
+            return [.LeaveCreateARView(mapName: mapName)]
         case (.CreateARView, .ViewPOIsRequested):
             self = .CreateARView
             return [.ViewPOIs]
-        case (.CreateARView, .SaveMapRequested(let mapName))
-            self = .POIScreen
-            return [.SaveMapToFirebase(mapName: mapName)]
-        case (.CreateARView, .LeaveMapRequested(let mapName))
-            self = .POIScreen
-            return [.LeaveMap(mapName: mapName)]
         default: break
         }
         return []
@@ -262,7 +265,7 @@ enum NavigateARViewState: StateType {
     
     // All the effectual inputs from the app which NavigateMapState can react to
     enum Event {
-        case LeaveMapRequested(mapName: String) // takes users to POIScreen state
+        case LeaveNavigateARViewRequested(mapName: String) // takes users to POIScreen state
         case ChangeRouteRequested(mapName: String, POIName: String) // we may need to save the mapName so that we can redirect users to a new POI destination
         case PlanPath
         
@@ -284,24 +287,24 @@ enum NavigateARViewState: StateType {
     // In response to an event, CreateMapState may emit a command
     mutating func handle(event:Event) -> [Command] {
         switch (self, event) {
-        case (.NavigateARView, .LeaveMapRequested(let mapName))
+        case (.NavigateARView, .LeaveNavigateARViewRequested(let mapName)):
             self = .NavigateARView
-            return [.LeaveMap(mapFileName: mapName)]
-        case (.NavigateARView, .ChangeRouteRequested(let mapName, let POIName))
+            return [.LeaveNavigateARView(mapName: mapName)]
+        case (.NavigateARView, .ChangeRouteRequested(let mapName, let POIName)):
             self = .NavigateARView
             return [.ModifyRoute(mapname: mapName, POIName: POIName)]
         case (.NavigateARView, .PlanPath):
             return [.PlanPath]
-        case (.NavigateARView, .EndpointReached(let mapName))
+        case (.NavigateARView, .EndpointReached(let mapName)):
             self = .NavigateARView
             return [.LoadEndPopUp(mapName: mapName)]
-        case (.NavigateARView, .HomeScreenRequested)
-            self = .HomeScreen
-            return []
-        case (.NavigateARView, .POIScreenRequested(let mapName))
+//        case (.NavigateARView, .HomeScreenRequested):
+//            self = .HomeScreen
+//            return []
+        case (.NavigateARView, .POIScreenRequested(let mapName)):
             self = .POIScreen
-            return [.LoadPOIScreen(mapFileName: mapName)]
-        case (.NavigateARView, .RateMapRequested(let mapName))
+            return [.LoadPOIScreen(mapName: mapName)]
+        case (.NavigateARView, .RateMapRequested(let mapName)):
             self = .NavigateARView
             return [.LoadRatePopUp(mapName: mapName)]
         case (.NavigateARView, .NewARFrame(let cameraFrame)):
@@ -317,8 +320,46 @@ enum NavigateARViewState: StateType {
 extension NavigateARViewState.Event {
     init?(_ event: Clew2AppState.Event) {
         switch event {
-            
+        case .HomeScreenRequested: // lower level
+            self = .HomeScreenRequested // switch to higher level event
+        
         default: return nil
         }
     }
 }
+
+extension RecordMapState.Event {
+    init?(_ event: CreatorAppState.Event) {
+        // Translate between events in CreatorAppState and events in RecordMapState
+        switch event {
+        case .NewARFrame(let cameraFrame):
+            self = .NewARFrame(cameraFrame: cameraFrame)
+        case .NewTagFound(let tag, let cameraTransform, let snapTagsToVertical):
+            self = .NewTagFound(tag: tag, cameraTransform: cameraTransform, snapTagsToVertical: snapTagsToVertical)
+        case .PlanesUpdated(let planes):
+            self = .PlanesUpdated(planes: planes)
+        case .SaveLocationRequested(let locationName):
+            self = .SaveLocationRequested(locationName: locationName)
+        case .ViewLocationsRequested:
+            self = .ViewLocationsRequested
+        case .DismissLocationsRequested:
+            self = .DismissLocationsRequested
+        default: return nil
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

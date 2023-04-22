@@ -35,14 +35,14 @@ class Clew2AppController: AppController {
     // counter incremented each time a graph is rendered in a new AR frame
     public var countFrame: Int = 0
     
-    func initialize() {
+    init() {
         Clew2AppController.shared.arViewer?.initialize()
         Clew2AppController.shared.arViewer?.setupPing()
     }
     
     func process(commands: [Clew2AppState.Command]) {
         for command in commands {
-            switch commands {
+            switch command {
                 // HomeScreen commands
             case .NameMap(let mapName):
                 break
@@ -52,19 +52,19 @@ class Clew2AppController: AppController {
             case .LoadLocationScreen:
                 break
                 // Location Screen commands
-            case .LoadPOIScreen(mapName: String):
+            case .LoadPOIScreen(let mapName):
                 break
                 // POIScreen commands
-            case .LoadReviews(mapName: String):
+            case .LoadReviews(let mapName):
                 break
-            case .StartNavigation(mapName: String):
+            case .StartNavigation(let mapName):
                 NavigateGlobalStateSingleton.shared = NavigateGlobalState()
             case .LoadPreviewDirections:
                 break
                 // ReviewsScreen commands TBD
                 // PreviewDirectionScreen commands TBD
                 //NameMapScreen commands TBD
-            case .StartCreation(mapName: String):
+            case .StartCreation(let mapName):
                 break
                 
                 // CreateARView commands
@@ -130,8 +130,6 @@ class Clew2AppController: AppController {
             case .UpdateInstructionText:
                 navigateViewer?.updateInstructionText()
                 print("updated instruction text")
-                
-<<<<<<< HEAD
             case .UpdatePoseVIO(cameraFrame: ARFrame):
                 break
             case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4):
@@ -145,14 +143,6 @@ class Clew2AppController: AppController {
                 break
             case .LoadRatePopUp(mapName: String):
                 break
-=======
-            case .UpdatePoseVIO(cameraFrame: ARFrame)
-            case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4)
-            
-            case .ModifyRoute(mapname: String, POIName: String) // call StartNavigation to a new POI endpoint
-            case .LoadEndPopUp(mapName: String)
-            case .LoadRatePopUp(mapName: String)
->>>>>>> parent of db0a39d (fixing bugs)
             }
         }
     }
@@ -166,11 +156,11 @@ class Clew2AppController: AppController {
 extension Clew2AppController {
     // functions that don't fall under any of the command object categories above
     func cacheLocationRequested(node: SCNNode, picture: UIImage, textNode: SCNNode) {
-        process(commands: [CreatorAppState.Command.CacheLocation(node: node, picture: picture, textNode: textNode)])
+        process(commands: [Clew2AppState.Command.CacheLocation(node: node, picture: picture, textNode: textNode)])
     }
     
     func updateLocationListRequested(node: SCNNode, picture: UIImage, textNode: SCNNode, poseId: Int) {
-        process(commands: [CreatorAppState.Command.UpdateLocationList(node: node, picture: picture, textNode: textNode, poseId: poseId)])
+        process(commands: [Clew2AppState.Command.UpdateLocationList(node: node, picture: picture, textNode: textNode, poseId: poseId)])
     }
     
     func deleteMap(mapName: String) {

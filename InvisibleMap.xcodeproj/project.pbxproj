@@ -114,6 +114,8 @@
 		9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AB32864FECB009E808C /* MenuView.swift */; };
 		9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141497E52645A41700BF0ABC /* InstructionOverlay.swift */; };
 		9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843BE7229EB402200733EE8 /* Clew2DirectionFeedback.swift */; };
+		9843BE7529F4866800733EE8 /* AprilTagTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822FA78524E2FB3E0001F463 /* AprilTagTracker.swift */; };
+		9843BE7629F486A100733EE8 /* StateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7562624230200230A58 /* StateType.swift */; };
 		984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86F39545210FA42600F209EC /* Assets.xcassets */; };
 		984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */; };
 		984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21D126B44F4D006EEF4F /* FirebaseStorage */; };
@@ -966,6 +968,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9843BE7529F4866800733EE8 /* AprilTagTracker.swift in Sources */,
 				9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */,
 				986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */,
 				9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */,
@@ -974,6 +977,7 @@
 				986A292C29B3AA1200879BCF /* AppController.swift in Sources */,
 				986A293029B3AD5200879BCF /* NavigateMapView.swift in Sources */,
 				9843BE6829E0CEAD00733EE8 /* ImageDisplay.mm in Sources */,
+				9843BE7629F486A100733EE8 /* StateType.swift in Sources */,
 				9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */,
 				9843BE6929E0CEB100733EE8 /* ImageConversion.mm in Sources */,
 				9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */,
