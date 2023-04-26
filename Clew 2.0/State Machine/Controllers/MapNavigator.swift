@@ -111,7 +111,7 @@ class MapNavigator: ObservableObject {
         let numTags = tagFinder.getNumberOfTags()
         if numTags > 0 {
             // remove all of the child nodes of the detection node using the map operation (map plays nicer with optionals than writing it as a for loop)
-            let _ = IClew2AppController.shared.arViewer?.detectionNode?.childNodes.map({ childNode in childNode.removeFromParentNode() })
+            let _ = Clew2AppController.shared.arViewer?.detectionNode?.childNodes.map({ childNode in childNode.removeFromParentNode() })
  
             for i in 0...tagFinder.getNumberOfTags()-1 {
                 let tag = tagFinder.getTagAt(i)

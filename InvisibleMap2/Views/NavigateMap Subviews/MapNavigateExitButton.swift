@@ -29,7 +29,7 @@ struct MapNavigateExitButton: View {
                 print("exiting map navigation view...")
                 self.mode.wrappedValue.dismiss()
              //   NavigationLink(destination: SelectPathView())
-                    InvisibleMapController.shared.process(event: .LeaveMapRequested(mapFileName: mapFileName)) // Tells the state machine to cancel the map navigating
+                    Clew2AppController.shared.process(event: .LeaveMapRequested(mapFileName: mapFileName)) // Tells the state machine to cancel the map navigating
                 },
                 secondaryButton: .cancel()
             )

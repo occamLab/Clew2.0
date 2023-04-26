@@ -129,7 +129,7 @@ class Clew2AppController: AppController {
                         }
                 
             case .UpdateInstructionText:
-                navigateViewer?.updateInstructionText()
+                navigateViewer?.updateNavigateInstructionText()
                 print("updated instruction text")
             case .UpdatePoseVIO(let cameraFrame):
                 break
@@ -138,7 +138,11 @@ class Clew2AppController: AppController {
 
             case .ModifyRoute(let mapName, let POIName):
                 // call StartNavigation to a new POI endpoint
-
+                break
+                
+            case .LeaveCreateARView(let mapName):
+                break
+            case .LeaveNavigateARView(let mapName):
                 break
             case .LoadEndPopUp(let mapName):
                 break
