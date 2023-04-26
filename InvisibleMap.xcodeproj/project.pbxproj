@@ -127,6 +127,9 @@
 		9843BE7F29F4A69900733EE8 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98211CA428725A620027860B /* FeedbackView.swift */; };
 		9843BE8029F4A6AC00733EE8 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9717726FB89DB00DEB00A /* AppController.swift */; };
 		9843BE8129F4A6B800733EE8 /* Localizable (en).strings in Resources */ = {isa = PBXBuildFile; fileRef = 98A859BE288050440017D09A /* Localizable (en).strings */; };
+		9843BE8429F99CA200733EE8 /* ARCoreCloudAnchors in Frameworks */ = {isa = PBXBuildFile; productRef = 9843BE8329F99CA200733EE8 /* ARCoreCloudAnchors */; };
+		9843BE8629F99CA200733EE8 /* ARCoreGARSession in Frameworks */ = {isa = PBXBuildFile; productRef = 9843BE8529F99CA200733EE8 /* ARCoreGARSession */; };
+		9843BE8829F99CA200733EE8 /* ARCoreGeospatial in Frameworks */ = {isa = PBXBuildFile; productRef = 9843BE8729F99CA200733EE8 /* ARCoreGeospatial */; };
 		984C21CD26B447C6006EEF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86F39545210FA42600F209EC /* Assets.xcassets */; };
 		984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */; };
 		984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 984C21D126B44F4D006EEF4F /* FirebaseStorage */; };
@@ -311,11 +314,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9843BE8629F99CA200733EE8 /* ARCoreGARSession in Frameworks */,
 				9860ED6A26B4532400C1EC55 /* SwiftGraph in Frameworks */,
 				86616BC52113369200DD565C /* visp3.framework in Frameworks */,
 				984C21D426B44F4D006EEF4F /* FirebaseAuth in Frameworks */,
+				9843BE8429F99CA200733EE8 /* ARCoreCloudAnchors in Frameworks */,
 				8630963C21125E89003D4434 /* opencv2.framework in Frameworks */,
 				984C21D026B44F4D006EEF4F /* FirebaseAnalytics in Frameworks */,
+				9843BE8829F99CA200733EE8 /* ARCoreGeospatial in Frameworks */,
 				984C21D226B44F4D006EEF4F /* FirebaseStorage in Frameworks */,
 				984C21D626B44F4D006EEF4F /* FirebaseDatabase in Frameworks */,
 			);
@@ -739,6 +745,9 @@
 				984C21D326B44F4D006EEF4F /* FirebaseAuth */,
 				984C21D526B44F4D006EEF4F /* FirebaseDatabase */,
 				9860ED6926B4532400C1EC55 /* SwiftGraph */,
+				9843BE8329F99CA200733EE8 /* ARCoreCloudAnchors */,
+				9843BE8529F99CA200733EE8 /* ARCoreGARSession */,
+				9843BE8729F99CA200733EE8 /* ARCoreGeospatial */,
 			);
 			productName = InvisibleMap;
 			productReference = 86F3953B210FA42500F209EC /* InvisibleMap.app */;
@@ -810,6 +819,7 @@
 				984C21CE26B44F4D006EEF4F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				9860ED6826B4532400C1EC55 /* XCRemoteSwiftPackageReference "SwiftGraph" */,
 				98CDCB7429D4D875001444B1 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */,
+				9843BE8229F99CA200733EE8 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */,
 			);
 			productRefGroup = 86F3953C210FA42500F209EC /* Products */;
 			projectDirPath = "";
@@ -1478,6 +1488,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9843BE8229F99CA200733EE8 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-ar/arcore-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		984C21CE26B44F4D006EEF4F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -1534,6 +1552,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9860ED6826B4532400C1EC55 /* XCRemoteSwiftPackageReference "SwiftGraph" */;
 			productName = SwiftGraph;
+		};
+		9843BE8329F99CA200733EE8 /* ARCoreCloudAnchors */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9843BE8229F99CA200733EE8 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreCloudAnchors;
+		};
+		9843BE8529F99CA200733EE8 /* ARCoreGARSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9843BE8229F99CA200733EE8 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreGARSession;
+		};
+		9843BE8729F99CA200733EE8 /* ARCoreGeospatial */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9843BE8229F99CA200733EE8 /* XCRemoteSwiftPackageReference "arcore-ios-sdk" */;
+			productName = ARCoreGeospatial;
 		};
 		984C21CF26B44F4D006EEF4F /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

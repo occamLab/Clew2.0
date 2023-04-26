@@ -14,6 +14,8 @@ import MediaPlayer
 // Note: ARView = ARViewController and ARSessionManager
 import ARCore
 import ARCoreCloudAnchors
+import FirebaseStorage
+import GoogleARCoreSDK
 
 protocol ARViewController {
     // Commands that interact with the ARView
