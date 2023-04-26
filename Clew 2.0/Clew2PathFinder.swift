@@ -8,7 +8,7 @@
 // Pathfinder class calculates turns or "keypoints" given a path array of LocationInfo
 //
 import Foundation
-import VectorMath
+//import VectorMath
 import ARKit
 import ARCoreGeospatial
 

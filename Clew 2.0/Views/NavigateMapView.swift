@@ -30,7 +30,6 @@ enum NavigationInstructionType: Equatable {
     var text: String? {
         get {
             switch self {
-                /*case .findTag: return "Point your camera at a tag \nnearby and press START TAG DETECTION to start navigation."*/
                 case .start: return "To start navigation, press START TAG DETECTION and pan your camera until you are notified of a tag detection. Follow the ping sound along the path. The ping will grow quieter the further you face away from the right direction. "
                 case .tagFound: return "Tag detected! In order to stabalize the path, press STOP TAG DETECTION." //Press STOP TAG DETECTION until you reach the next tag."
                 
@@ -176,17 +175,16 @@ enum NavigationInstructionType: Equatable {
     
     // for testing purposes
     @ObservedObject var navigation = Navigation()
-   // @Published var binaryDirectionKey = NavigationBinaryDirection.none
-   // @Published var binaryDirection: String = ""
-   // @Published var clockDirectionKey = NavigationClockDirection.none
-   // @Published var clockDirection: String = ""
+    @Published var binaryDirectionKey = NavigationBinaryDirection.none
+    @Published var binaryDirection: String = ""
+    @Published var clockDirectionKey = NavigationClockDirection.none
+    @Published var clockDirection: String = ""
     
     @Published var tagFound: Bool
     // TODO: resolve anchors in ARView and use the NavigateGlobalStateSingleton to set the variables to true
     @Published var didGeospatialAnchorResolved: Bool
     @Published var didCloudAnchorResolved: Bool
     @Published var endPointReached: Bool // set to true in ARView using the NavigateGlobalStateSingleton when current position is within endpointSphere
-    
     @Published var navigationInstructionWrapper: NavigationInstructionType
     
     init() {
@@ -195,12 +193,12 @@ enum NavigationInstructionType: Equatable {
         didCloudAnchorResolved = false
         //cloudAnchorType = nil // TODO: update value if didCloudAnchorResolved is true using the label that map creators chose when dropping this cloud anchor (POI, door, stair)
         endPointReached = false
-        navigationInstructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
+        navigationInstructionWrapper = .start(startTime: NSDate().timeIntervalSince1970)
         Clew2AppController.shared.navigateViewer = self
     }
     
     // Navigate view controller commands
-    func updateInstructionText() {
+    func updateNavigateInstructionText() {
         DispatchQueue.main.async {
             if let map = Clew2AppController.shared.mapNavigator.map {
                 if !map.firstTagFound {
@@ -233,7 +231,6 @@ struct NavigateMapView: View {
     init(mapFileName: String = "") {
         print("currentUser is \(Auth.auth().currentUser!.uid)")
         self.mapFileName = mapFileName
-      //  self.navigateGlobalState.instructionWrapper = .findTag(startTime: NSDate().timeIntervalSince1970)
     }
     
     var body : some View {
@@ -260,7 +257,7 @@ struct NavigateMapView: View {
                         .animation(.easeInOut)
                 }
                 TagDetectionButton(navigateGlobalState: navigateGlobalState)
-                    .environmentObject(InvisibleMapController.shared.mapNavigator)
+                    .environmentObject(Clew2AppController.shared.mapNavigator)
                     .frame(maxHeight: .infinity, alignment: .bottom)
             }
             .padding()

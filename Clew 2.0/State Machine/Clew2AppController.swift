@@ -130,7 +130,6 @@ class Clew2AppController: AppController {
             case .UpdateInstructionText:
                 navigateViewer?.updateInstructionText()
                 print("updated instruction text")
-                
             case .UpdatePoseVIO(cameraFrame: ARFrame):
                 break
             case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4):
