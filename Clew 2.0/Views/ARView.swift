@@ -11,8 +11,7 @@ import SwiftUI
 import AVFoundation
 import AudioToolbox
 import MediaPlayer
-// ARView ~ VC and ARSessionManager
-// NEW CODE 03/10: Adding cloud anchors
+// Note: ARView = ARViewController and ARSessionManager
 import ARCore
 import ARCoreCloudAnchors
 
@@ -27,6 +26,7 @@ protocol ARViewController {
     func resetRecordingSession()
     func hostCloudAnchor(withTransform transform: simd_float4x4)
     func didHostCloudAnchor(cloudIndentifier: String, anchorIdentifier: String, withTransform transform : simd_float4x4)
+    func dropGeospatialAnchor(location: LocationInfoGeoSpatial)
   //  func sessionDidRelocalize()
 }
 
@@ -109,8 +109,9 @@ class ARView: UIViewController {
     var visualKeypoints: [KeypointInfo] = []
     var cameraLocationInfos: [LocationInfo] = []
     let storageBaseRef = Storage.storage().reference()
-    static var shared = ARSessionManager()
-    var delegate: ARSessionManagerDelegate?
+    //static var shared = ARSessionManager()
+    // note: instead of using a delegate we use the Clew2AppState and Clew2AppController
+    //var delegate: ARSessionManagerDelegate?
     var lastTimeOutputtedGeoAnchors = Date()
     var lastGeospatialLogTime = Date()
     let geoSpatialAlignmentFilter = GeoSpatialAlignment()
@@ -220,8 +221,9 @@ class ARView: UIViewController {
             sessionCloudAnchors = [:]
             if cloudAnchorsForAlignment.count > 20 {
                 let tooManyAnchors = "Too many cloud anchors. Results may be unpredictable."
-               // AnnouncementManager.shared.announce(announcement: tooManyAnchors)
-          //      PathLogger.shared.logSpeech(utterance: tooManyAnchors)
+                // TODO: Need to add announcement manager later
+                //AnnouncementManager.shared.announce(announcement: tooManyAnchors)
+                //PathLogger.shared.logSpeech(utterance: tooManyAnchors)
             }
             for cloudAnchor in cloudAnchorsForAlignment {
                 do {
@@ -284,6 +286,11 @@ class ARView: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
        super.viewWillDisappear(animated)
        arView.session.pause()
+    }
+    
+    /// Adds an anchor to the scene
+    func add(anchor: ARAnchor) {
+        sceneView.session.add(anchor: anchor)
     }
     
     /// Creating cloud anchor using an existing local ARAnchor
@@ -472,7 +479,8 @@ extension ARView: ARSessionDelegate {
         if let manualAlignment = geoSpatialAlignmentFilter.update(anchorTransform: alignmentAnchor.transform, geoSpatialAlignmentCrumb: geoSpatialAlignmentCrumb, cameraGeospatialTransform: geospatialTransform, filterGeoSpatial: filterGeoSpatial) {
             self.manualAlignment = manualAlignment
             print("self.manualAlignment \(self.manualAlignment)")
-            delegate?.didDoGeoAlignment()
+            // TODO: Need to handle the event of geoalignment in Clew2AppController and Clew2AppState instead of using the delegate
+            //delegate?.didDoGeoAlignment()
         }
     }
     

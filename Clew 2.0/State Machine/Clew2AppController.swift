@@ -15,24 +15,19 @@ import ARKit
 class Clew2AppController: AppController {
     public static var shared = Clew2AppController()
     private var state = Clew2AppState.initialState
-    
     // Creator controllers for handling commands
     var mapRecorder = MapRecorder()
     var recordViewer: RecordViewController? // Initialized in RecordMapView.swift
     var mapDatabase = FirebaseManager.createMapDatabase()
-    
     // Navigate controllers for handling commands
     public var mapNavigator = MapNavigator()
     var navigateViewer: NavigateViewController? // Initiliazed in NavigateMapView.swift
-    
-    // controllers for both navigate and create
+    // Controllers for both navigate and create
     public var arViewer: ARViewController? // Initialized in ARView.swift
     var cloudAnchorType: String // door, stair, POI
-    
-    // state of whether the current app is in the process of leaving the app
+    // State of whether the current app is in the process of leaving the app
     public var exitingMap = false
-    
-    // counter incremented each time a graph is rendered in a new AR frame
+    // Counter incremented each time a graph is rendered in a new AR frame
     public var countFrame: Int = 0
     
     init() {
@@ -64,59 +59,58 @@ class Clew2AppController: AppController {
                 // ReviewsScreen commands TBD
                 // PreviewDirectionScreen commands TBD
                 //NameMapScreen commands TBD
-            case .StartCreation(let mapName):
-                break
+                //  case .LocateAndCategorizeMap: // user uses GPS to automatically categorize the map - map still needs to be named
+                //  case .LoadAndCategorizeMap(mapName: String): // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
+            
                 
                 // CreateARView commands
-          //  case .LocateAndCategorizeMap: // user uses GPS to automatically categorize the map - map still needs to be named
-          //  case .LoadAndCategorizeMap(mapName: String): // user searches for a location that doesn't have a map yet and creates a map for that location - map already named
-               
-            // MapRecorder and RecordMapView commands
             case .DropGeospatialAnchor:
                 self.arViewer?.dropGeoSpatialAnchor() //TODO: need location argument
                 Clew2AppController.shared.mapRecorder.geospatialAnchorWasRecorded = true
-                
             case .DropPOIAnchor:
                 self.arViewer?.hostCloudAnchor() //TODO: need transform argument
                 Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
                 Clew2AppController.shared.cloudAnchorType = "POI"
-                
             case .DropDoorAnchor:
                 self.arViewer?.hostCloudAnchor() //TODO: need transform argument
                 Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
                 Clew2AppController.shared.cloudAnchorType = "door"
-                
             case .DropStairAnchor:
                 self.arViewer?.hostCloudAnchor() //TODO: need transform argument
                 Clew2AppController.shared.mapRecorder.cloudAnchorWasRecorded = true
                 Clew2AppController.shared.cloudAnchorType = "stair"
-                
             case .ViewPOIs(let mapName):
                 // viewing POIs dropped during creation of map
                 process(commands: [.LoadPOIScreen(mapName: mapName)])
-                
             case .NamePOI: //TODO: after dropping POI during creation, name the POI, store it in some dictionary? put into Firebase?
                 // ask: how to save this in Firebase
                 break
-                
-            case .SaveMapToFirebase(mapName: String):
+            case .SaveMapToFirebase(let mapName):
                 Clew2AppController.shared.mapRecorder.sendToFirebase(mapName: mapName)
+            case .UpdateCreateInstructionText:
+                recordViewer?.updateRecordInstructionText()
+                print("updated creation instruction text")
             
             // NavigateARView commands
-            case .LeaveMap(mapName: String):
+            case .ResolveCloudAnchor:
+                // ask: arview session that resolves cloud anchors - how do we call this?
+                // the session will mark the anchorType var in the session
+                break
+            case .UpdateNavigateInstructionText:
+                navigateViewer?.updateNavigateInstructionText()
+                print("updated navigation instruction text")
+            // TODO: need a case that continuously resolves cloud anchors (breadcrumbs for the path)
+            // route anchors are nameless cloud anchors that're dropped every x seconds or every x feet (just like breadcrumbs in Clew)
+     
+            // For both NavigateARView and CreateARView
+            case .LeaveARView(let mapName):
                 self.arViewer?.resetNavigatingSession()
                 self.mapNavigator.resetMap() // destroys the map
                 self.exitingMap = false
                 print("leave map")
-                //TODO: need to process command that loads the page with list of destinations (POIs) before navigating or creating view
-            
-            // TODO: need a case that continuously resolves cloud anchors (breadcrumbs for the path)
-            // route anchors are nameless cloud anchors that're dropped every x seconds or every x feet (just like breadcrumbs in Clew)
-            case .ResolvedCloudAnchor:
-                // ask: arview session that resolves cloud anchors - how do we call this?
-                // the session will mark the anchorType var in the session
-                break
-     
+                process(commands: [.LoadPOIScreen(mapName: mapName)])
+                
+            // From IM code
             case .PlanPath:
                 if let cameraNode = arViewer?.cameraNode {
                         let cameraPos = arViewer!.convertNodeOrigintoMapFrame(node: cameraNode)
@@ -126,18 +120,12 @@ class Clew2AppController: AppController {
                                 countFrame += 1
                             }
                         }
-                
-            case .UpdateInstructionText:
-                navigateViewer?.updateInstructionText()
-                print("updated instruction text")
             case .UpdatePoseVIO(cameraFrame: ARFrame):
                 break
             case .UpdatePoseTag(tag: AprilTags, cameraTransform: simd_float4x4):
                 break
-
             case .ModifyRoute(mapname: String, POIName: String):
                 // call StartNavigation to a new POI endpoint
-
                 break
             case .LoadEndPopUp(mapName: String):
                 break
