@@ -76,14 +76,14 @@ class MapRecorder: MapRecorderController, ObservableObject {
         processingFrame = true
         lastRecordedFrame = cameraFrame
         
-        recordPoseData(cameraFrame: cameraFrame, timestamp: InvisibleMapCreatorController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId)
-        tagRecordingStates(cameraFrame: cameraFrame, timestamp: InvisibleMapCreatorController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId)
+        recordPoseData(cameraFrame: cameraFrame, timestamp: Clew2AppController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId)
+        tagRecordingStates(cameraFrame: cameraFrame, timestamp: Clew2AppController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId)
         recordPlaneData(cameraFrame: cameraFrame, poseId: poseId)
         poseId += 1
         
         if let pendingLocation = pendingLocation {
-            locationData.append(getLocationCoordinates(cameraFrame: cameraFrame, timestamp: InvisibleMapCreatorController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId, location: pendingLocation))
-            InvisibleMapCreatorController.shared.updateLocationListRequested(node: pendingNode!.0, picture: pendingNode!.1, textNode: pendingNode!.2, poseId: poseId)
+            locationData.append(getLocationCoordinates(cameraFrame: cameraFrame, timestamp: Clew2AppController.shared.arViewer!.lastRecordedTimestamp, poseId: poseId, location: pendingLocation))
+            Clew2AppController.shared.updateLocationListRequested(node: pendingNode!.0, picture: pendingNode!.1, textNode: pendingNode!.2, poseId: poseId)
             self.pendingLocation = nil
             self.pendingNode = nil
         }
@@ -162,7 +162,7 @@ class MapRecorder: MapRecorderController, ObservableObject {
     
     /// Clear timestamp, pose, tag, and location data
     func clearData() {
-        InvisibleMapCreatorController.shared.arViewer!.lastRecordedTimestamp = -1
+        Clew2AppController.shared.arViewer!.lastRecordedTimestamp = -1
         lastRecordedFrame = nil
         firstTagFound = false
         seesTag = false
@@ -242,8 +242,8 @@ extension MapRecorder {
                 var tagDict:[String:Any] = [:]
                 
                 
-                if ((InvisibleMapCreatorController.shared.arViewer?.supportsLidar) != nil ? InvisibleMapCreatorController.shared.arViewer?.supportsLidar as! Bool : false) {
-                    let raycastPose: simd_float4x4? = InvisibleMapCreatorController.shared.arViewer?.raycastTag(tag: tagArray[i], cameraTransform: cameraFrame.camera.transform, snapTagsToVertical: snapTagsToVertical)
+                if ((Clew2AppController.shared.arViewer?.supportsLidar) != nil ? Clew2AppController.shared.arViewer?.supportsLidar as! Bool : false) {
+                    let raycastPose: simd_float4x4? = Clew2AppController.shared.arViewer?.raycastTag(tag: tagArray[i], cameraTransform: cameraFrame.camera.transform, snapTagsToVertical: snapTagsToVertical)
                     
                     if raycastPose == nil {
                         continue
@@ -252,7 +252,7 @@ extension MapRecorder {
                     }
                 }
                 
-                InvisibleMapCreatorController.shared.process(event: .NewTagFound(tag: tagArray[i], cameraTransform: cameraFrame.camera.transform, snapTagsToVertical: snapTagsToVertical)) // Generates event to detect new tag
+                Clew2AppController.shared.process(event: .NewTagFound(tag: tagArray[i], cameraTransform: cameraFrame.camera.transform, snapTagsToVertical: snapTagsToVertical)) // Generates event to detect new tag
                 
                 var pose = tagArray[i].poseData
                 

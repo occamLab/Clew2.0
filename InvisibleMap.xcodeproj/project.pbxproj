@@ -108,7 +108,6 @@
 		9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F64364E269DDD08007BD526 /* MemoryChecker.m */; };
 		9843BE6B29E0CEB800733EE8 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F131D71271F5FCC00568FEC /* FirebaseManager.swift */; };
 		9843BE6C29E0CEBB00733EE8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83DB69272C7AE800D0148F /* Utils.swift */; };
-		9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7412624229600230A58 /* ContentView.swift */; };
 		9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83DB71273F02C100D0148F /* BaseNavigationView.swift */; };
 		9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9BE972756BAE9001B5A2B /* ViewStructs.swift */; };
 		9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AB32864FECB009E808C /* MenuView.swift */; };
@@ -117,7 +116,6 @@
 		9843BE7529F4866800733EE8 /* AprilTagTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822FA78524E2FB3E0001F463 /* AprilTagTracker.swift */; };
 		9843BE7629F486A100733EE8 /* StateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7562624230200230A58 /* StateType.swift */; };
 		9843BE7729F4A36100733EE8 /* MapNavigateExitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98082AC2286CB6AC009E808C /* MapNavigateExitButton.swift */; };
-		9843BE7829F4A36400733EE8 /* TagDetectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE46D7F27644F93001A3812 /* TagDetectionButton.swift */; };
 		9843BE7929F4A36600733EE8 /* GetDirectionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859CA2889C7530017D09A /* GetDirectionsButton.swift */; };
 		9843BE7A29F4A64E00733EE8 /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
 		9843BE7B29F4A65000733EE8 /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
@@ -144,7 +142,6 @@
 		986A29252997FD6200879BCF /* Clew2AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A29242997FD6200879BCF /* Clew2AppState.swift */; };
 		986A29282997FDE700879BCF /* Clew2AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A29272997FDE700879BCF /* Clew2AppController.swift */; };
 		986A292A2997FE8800879BCF /* Clew2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A29292997FE8800879BCF /* Clew2App.swift */; };
-		986A292C29B3AA1200879BCF /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A292B29B3AA1200879BCF /* AppController.swift */; };
 		986A293029B3AD5200879BCF /* NavigateMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A292F29B3AD5200879BCF /* NavigateMapView.swift */; };
 		986A293229B3AD6800879BCF /* RecordMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A293129B3AD6800879BCF /* RecordMapView.swift */; };
 		986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986A293329B3AD9800879BCF /* MapRecorder.swift */; };
@@ -155,6 +152,13 @@
 		98A859C22886FBED0017D09A /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859C12886FBED0017D09A /* UserAccountView.swift */; };
 		98A859C32886FBED0017D09A /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859C12886FBED0017D09A /* UserAccountView.swift */; };
 		98A859CB2889C7530017D09A /* GetDirectionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A859CA2889C7530017D09A /* GetDirectionsButton.swift */; };
+		98AE842D29F969FB00737657 /* simd+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A8259E24B3854000AFC390 /* simd+ext.swift */; };
+		98AE842F29F96E3700737657 /* PathLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE842E29F96E3700737657 /* PathLogger.swift */; };
+		98AE843129F96FB500737657 /* ARSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE843029F96FB500737657 /* ARSessionManager.swift */; };
+		98AE843329F9707000737657 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE843229F9707000737657 /* Utility.swift */; };
+		98AE843529F9728400737657 /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE843429F9728400737657 /* AnnouncementManager.swift */; };
+		98AE843629F973CD00737657 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1447B7412624229600230A58 /* ContentView.swift */; };
+		98AE843829F9770800737657 /* TestAccuracyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AE843729F9770800737657 /* TestAccuracyView.swift */; };
 		98B2357929EB48CD00BA2853 /* Clew2PathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */; };
 		98BF26A026AF4F9E0076427E /* AppleSignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269526AF01F60076427E /* AppleSignInController.swift */; };
 		98BF26A126AF4F9E0076427E /* AuthenticationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */; };
@@ -269,6 +273,11 @@
 		98A859BE288050440017D09A /* Localizable (en).strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Localizable (en).strings"; sourceTree = "<group>"; };
 		98A859C12886FBED0017D09A /* UserAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountView.swift; sourceTree = "<group>"; };
 		98A859CA2889C7530017D09A /* GetDirectionsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDirectionsButton.swift; sourceTree = "<group>"; };
+		98AE842E29F96E3700737657 /* PathLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathLogger.swift; sourceTree = "<group>"; };
+		98AE843029F96FB500737657 /* ARSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionManager.swift; sourceTree = "<group>"; };
+		98AE843229F9707000737657 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		98AE843429F9728400737657 /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
+		98AE843729F9770800737657 /* TestAccuracyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccuracyView.swift; sourceTree = "<group>"; };
 		98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clew2PathFinder.swift; sourceTree = "<group>"; };
 		98BF269526AF01F60076427E /* AppleSignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInController.swift; sourceTree = "<group>"; };
 		98BF269726AF0A7E0076427E /* AuthenticationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHelper.swift; sourceTree = "<group>"; };
@@ -618,6 +627,10 @@
 				986A29292997FE8800879BCF /* Clew2App.swift */,
 				986A292B29B3AA1200879BCF /* AppController.swift */,
 				98B2357829EB48CD00BA2853 /* Clew2PathFinder.swift */,
+				98AE842E29F96E3700737657 /* PathLogger.swift */,
+				98AE843029F96FB500737657 /* ARSessionManager.swift */,
+				98AE843229F9707000737657 /* Utility.swift */,
+				98AE843429F9728400737657 /* AnnouncementManager.swift */,
 			);
 			path = "Clew 2.0";
 			sourceTree = "<group>";
@@ -638,6 +651,7 @@
 				986A292F29B3AD5200879BCF /* NavigateMapView.swift */,
 				986A293129B3AD6800879BCF /* RecordMapView.swift */,
 				98C7D13229BBE22B000C46CA /* ARView.swift */,
+				98AE843729F9770800737657 /* TestAccuracyView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -986,17 +1000,16 @@
 				9843BE6729E0CEA900733EE8 /* TagFinder.mm in Sources */,
 				986A293429B3AD9800879BCF /* MapRecorder.swift in Sources */,
 				9843BE7329EB402200733EE8 /* Clew2DirectionFeedback.swift in Sources */,
+				98AE843329F9707000737657 /* Utility.swift in Sources */,
 				98503DFD29D4C882003428AD /* ARCoreKey.swift in Sources */,
 				986A29282997FDE700879BCF /* Clew2AppController.swift in Sources */,
-				986A292C29B3AA1200879BCF /* AppController.swift in Sources */,
 				986A293029B3AD5200879BCF /* NavigateMapView.swift in Sources */,
 				9843BE6829E0CEAD00733EE8 /* ImageDisplay.mm in Sources */,
 				9843BE7629F486A100733EE8 /* StateType.swift in Sources */,
 				9843BE7029E0CED600733EE8 /* MenuView.swift in Sources */,
+				98AE843829F9770800737657 /* TestAccuracyView.swift in Sources */,
 				9843BE6929E0CEB100733EE8 /* ImageConversion.mm in Sources */,
-				9843BE6D29E0CECA00733EE8 /* ContentView.swift in Sources */,
 				9843BE6E29E0CECD00733EE8 /* BaseNavigationView.swift in Sources */,
-				9843BE7829F4A36400733EE8 /* TagDetectionButton.swift in Sources */,
 				9843BE6A29E0CEB500733EE8 /* MemoryChecker.m in Sources */,
 				98B2357929EB48CD00BA2853 /* Clew2PathFinder.swift in Sources */,
 				9843BE7129E0CEDC00733EE8 /* InstructionOverlay.swift in Sources */,
@@ -1004,15 +1017,20 @@
 				986A291C2997FD3700879BCF /* AccountAuthenticationModificationViewController.swift in Sources */,
 				98C7D13329BBE22C000C46CA /* ARView.swift in Sources */,
 				9843BE7B29F4A65000733EE8 /* AuthenticationHelper.swift in Sources */,
+				98AE842D29F969FB00737657 /* simd+ext.swift in Sources */,
 				9843BE7D29F4A69500733EE8 /* HelpView.swift in Sources */,
 				9843BE6C29E0CEBB00733EE8 /* Utils.swift in Sources */,
 				986A29252997FD6200879BCF /* Clew2AppState.swift in Sources */,
+				98AE843629F973CD00737657 /* ContentView.swift in Sources */,
 				986A293229B3AD6800879BCF /* RecordMapView.swift in Sources */,
+				98AE843129F96FB500737657 /* ARSessionManager.swift in Sources */,
 				9843BE7929F4A36600733EE8 /* GetDirectionsButton.swift in Sources */,
 				9843BE7F29F4A69900733EE8 /* FeedbackView.swift in Sources */,
+				98AE842F29F96E3700737657 /* PathLogger.swift in Sources */,
 				9843BE6F29E0CED300733EE8 /* ViewStructs.swift in Sources */,
 				986A292A2997FE8800879BCF /* Clew2App.swift in Sources */,
 				9843BE8029F4A6AC00733EE8 /* AppController.swift in Sources */,
+				98AE843529F9728400737657 /* AnnouncementManager.swift in Sources */,
 				9843BE7A29F4A64E00733EE8 /* AppleSignInController.swift in Sources */,
 				9843BE6629E0CE9300733EE8 /* Map.swift in Sources */,
 				986A293629B3ADA400879BCF /* MapNavigator.swift in Sources */,

@@ -47,11 +47,11 @@ class MapNavigator: ObservableObject {
     }
     
     @objc func sendPathPlanEvent() {
-        InvisibleMapController.shared.process(event: .PlanPath)
+        Clew2AppController.shared.process(event: .PlanPath)
     }
     
     @objc func waitBeforeLeavingMap(mapFileName: String) {
-        InvisibleMapController.shared.process(event: .ReadyToLeaveMap(mapFileName: mapFileName))
+        Clew2AppController.shared.process(event: .ReadyToLeaveMap(mapFileName: mapFileName))
     }
     
     /// Plans a path from the current location to the end and visualizes it in red
@@ -111,7 +111,7 @@ class MapNavigator: ObservableObject {
         let numTags = tagFinder.getNumberOfTags()
         if numTags > 0 {
             // remove all of the child nodes of the detection node using the map operation (map plays nicer with optionals than writing it as a for loop)
-            let _ = InvisibleMapController.shared.arViewer?.detectionNode?.childNodes.map({ childNode in childNode.removeFromParentNode() })
+            let _ = IClew2AppController.shared.arViewer?.detectionNode?.childNodes.map({ childNode in childNode.removeFromParentNode() })
  
             for i in 0...tagFinder.getNumberOfTags()-1 {
                 let tag = tagFinder.getTagAt(i)
@@ -121,8 +121,8 @@ class MapNavigator: ObservableObject {
                     tagArray.append(tag)
                     if let map = self.map {
                         if let _ = map.tagDictionary[Int(tag.number)] {
-                            InvisibleMapController.shared.process(event: .TagFound(tag: tagArray[tagArray.count-1], cameraTransform: cameraTransform))
-                            InvisibleMapController.shared.arViewer?.detectTag(tag: tag, cameraTransform: cameraTransform, snapTagsToVertical: map.snapTagsToVertical)
+                            Clew2AppController.shared.process(event: .TagFound(tag: tagArray[tagArray.count-1], cameraTransform: cameraTransform))
+                            Clew2AppController.shared.arViewer?.detectTag(tag: tag, cameraTransform: cameraTransform, snapTagsToVertical: map.snapTagsToVertical)
                         }
                     }
                 }

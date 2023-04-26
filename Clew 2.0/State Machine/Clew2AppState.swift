@@ -51,10 +51,10 @@ indirect enum Clew2AppState: StateType {
         
         // CreateARView events
         case DropGeospatialAnchorRequested // anchors outside the establishment
-        case DropPOIAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform) // POI cloud anchors
+        case DropPOIAnchorRequested(cloudIdentifier: String, withTransform: simd_float4x4) // POI cloud anchors
         // TODO: cloud anchors are both breadcrumbs and can be named as POIs - need to figure out the time interval at which it should be dropped or if we should make users drop it frequently and name those that they want to
-        case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
-        case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
+        case DropDoorAnchorRequested(cloudIdentifier: String, withTransform: simd_float4x4)
+        case DropStairAnchorRequested(cloudIdentifier: String, withTransform: simd_float4x4)
         case ViewPOIsRequested
         case NamePOIRequested
         case SaveMapRequested(mapName: String)
@@ -99,12 +99,14 @@ indirect enum Clew2AppState: StateType {
         // PreviewDirectionScreen commands TBD
         //NameMapScreen commands TBD
         
+        case LeaveMap(mapName: String)
+        
         // CreateARView commands
-        case DropGeospatialAnchor
-        case DropPOIAnchor
-        case DropDoorAnchor
-        case DropStairAnchor
-        case ViewPOIs
+        case DropGeospatialAnchor(location: LocationInfoGeoSpatial)
+        case DropPOIAnchor(cloudIdentifier: String, withTransform: simd_float4x4)
+        case DropDoorAnchor(cloudIdentifier: String, withTransform: simd_float4x4)
+        case DropStairAnchor(cloudIdentifier: String, withTransform: simd_float4x4)
+        case ViewPOIs(mapName: String)
         case NamePOI
         case SaveMapToFirebase(mapName: String)
         case LeaveCreateARView(mapName: String)
@@ -210,7 +212,7 @@ enum CreateARViewState: StateType {
         case DropPOIAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case DropDoorAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
         case DropStairAnchorRequested(cloudIdentifier: GARAnchor.cloudIdentifier, withTransform: GARAnchor.transform)
-        case ViewPOIsRequested
+        case ViewPOIsRequested(mapName:String)
         case NamePOIRequested
         // events handled in higher level (to switch to higher level states)
         case SaveMapRequested(mapName: String)
@@ -240,9 +242,9 @@ enum CreateARViewState: StateType {
         case (.CreateARView, .DropStairAnchorRequested):
             self = .DropStairAnchorState
             return [.DropStairAnchor]
-        case (.CreateARView, .ViewPOIsRequested):
+        case (.CreateARView, .ViewPOIsRequested(let mapName)):
             self = .CreateARView
-            return [.ViewPOIs]
+            return [.ViewPOIs(mapName: mapName)]
         default: break
         }
         return []
@@ -263,8 +265,8 @@ extension CreateARViewState.Event {
             self = .DropDoorAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: withTransform)
         case .DropStairAnchorRequested(let cloudIdentifier, let withTransform):
             self = .DropStairAnchorRequested(cloudIdentifier: cloudIdentifier, withTransform: withTransform)
-        case .ViewPOIsRequested:
-            self = .ViewPOIsRequested
+        case .ViewPOIsRequested(let mapName):
+            self = .ViewPOIsRequested(let mapName)
         case .NamePOIRequested:
             self = .NamePOIRequested
         case .NewARFrame(let cameraFrame):

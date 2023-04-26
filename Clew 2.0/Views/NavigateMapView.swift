@@ -266,17 +266,19 @@ struct NavigateMapView: View {
     }
 }
 
-extension UINavigationController {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-      //  self.navigationItem.hidesBackButton = true
-        // Creates a translucent toolbar
-        let toolbarAppearance = UIToolbarAppearance()
-        toolbarAppearance.configureWithTransparentBackground()
-        toolbarAppearance.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.7)
-        UIToolbar.appearance().standardAppearance = toolbarAppearance
-    }
-}
+// This extension already exists somewhere else
+
+//extension UINavigationController {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//      //  self.navigationItem.hidesBackButton = true
+//        // Creates a translucent toolbar
+//        let toolbarAppearance = UIToolbarAppearance()
+//        toolbarAppearance.configureWithTransparentBackground()
+//        toolbarAppearance.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.7)
+//        UIToolbar.appearance().standardAppearance = toolbarAppearance
+//    }
+//}
 
 /*
 struct NavigateMapView_Previews: PreviewProvider {

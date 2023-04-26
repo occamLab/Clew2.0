@@ -626,6 +626,24 @@ extension ARView: ARSessionDelegate {
 }
 
 extension ARView: ARViewController {
+    func hostCloudAnchor(withTransform transform: simd_float4x4) {
+        let newAnchor = ARAnchor(transform: transform)
+        add(anchor: newAnchor)
+        do {
+            if let newGARAnchor = try garSession?.hostCloudAnchor(newAnchor) {
+                return (newGARAnchor, newAnchor)
+            }
+        } catch {
+            print("host cloud anchor failed")
+        }
+        //return nil
+    }
+    
+    func didHostCloudAnchor(cloudIndentifier: String, anchorIdentifier: String, withTransform transform: simd_float4x4) {
+        AnnouncementManager.shared.announce(announcement: "Cloud anchor created")
+        cloudAnchors[NSString(string: cloudIdentifier)] = ARAnchor(transform: transform)
+    }
+    
     
     /// Transforms the AprilTag position into world frame
     var supportsLidar: Bool {
